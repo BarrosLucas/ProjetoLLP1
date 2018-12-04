@@ -82,7 +82,7 @@ void menu(){
 	printf("2 - Consultar Imovel\n");
 	printf("3 - Remover Imovel\n");
 	printf("4 - Editar Imovel\n");
-	printf("\Escolha: ");
+	printf("Escolha: ");
 	
 	
 	scanf("%d",&escolha);
@@ -341,18 +341,28 @@ void consultar(){
 	int consulta = menuConsulta();
 	int i;
 	char letra;
+	fflush(stdin);
 	switch(consulta){
 		case 1:
-			fflush(stdin);
 			mostrarTudo();
-			printf("Digite qualquer tecla para voltar...");
+			printf("Digite enter para voltar...");
 			scanf("%c",&letra);
 			system("cls");
 			menu();
+			break;
+		case 2:
+			fflush(stdin);
+			buscarPorTitulo();
+			printf("Digite enter para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+			break;	
 		
 	}
 }
 int menuConsulta(){
+	fflush(stdin);
 	int escolha;
 	printf("Que tipo de consulta deseja fazer?\n");
 	printf("1 - Mostrar todos os imoveis\n");
@@ -363,8 +373,9 @@ int menuConsulta(){
 	printf("6 - Buscar os imoveis a aluguel por tipo de imovel\n");
 	printf("7 - Voltar\n");
 	scanf("%d",&escolha);
+	fflush(stdin);
 	system("cls");
-	if(escolha < 1 || escolha > 6){
+	if(escolha < 1 || escolha > 7){
 		printf("Opcao invalida...\n");
 		escolha = menuConsulta();
 	}
@@ -390,6 +401,58 @@ void mostrarTudo(){
 		printf("\n");
 		mostrarTerreno(&terrenos[i]);
 		printf("\n");
+	}
+}
+
+void buscarPorTitulo(){
+	fflush(stdin);
+	char titulo[30];
+	int i,qnt=0;
+	printf("=====BUSCA POR TITULO=====\n");
+	printf("Titulo: ");
+	fgets(titulo,30,stdin);
+	fflush(stdin);
+	
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(stricmp(titulo,casas[i].tituloDoAnuncio)==0){
+			mostrarCasa(&casas[i]);
+			qnt=1;
+		}
+	}
+	if(qnt == 0){
+		for(i=0;i<ultimoIndiceApartamentos;i++){
+			if(stricmp(titulo,apartamentos[i].tituloDoAnuncio)==0){
+				mostrarApartamento(&apartamentos[i]);
+				qnt = 1;
+			}
+		}
+		if(qnt == 0){
+			for(i=0;i<ultimoIndiceTerrenos;i++){
+				if(stricmp(titulo,terrenos[i].tituloDoAnuncio)==0){
+					mostrarTerreno(&terrenos[i]);
+					qnt = 1;
+				}
+			}	
+		}
+		
+	}
+	if(qnt == 0){
+		fflush(stdin);
+		char escolha;
+		system("cls");
+		printf("Nenhum item identificado...\n");
+		printf("Deseja realizar novamente a busca?\n");
+		printf("1 - Sim\n");
+		printf("Qualquer outra tecla - Nao\n");
+		printf("Sua escolha: ");
+		scanf("%c",&escolha);
+		if(escolha == '1'){
+			system("cls");
+			buscarPorTitulo();
+		}else{
+			system("cls");
+			menu();
+		}
 	}
 }
 
