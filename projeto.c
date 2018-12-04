@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #define ALUGUEL 1
 #define VENDA   0
 
@@ -61,8 +62,11 @@ void mostrarCasa(struct Casa *casa);
 struct Casa casas[999];
 struct Apartamento apartamentos[999];
 struct Terreno terrenos[999];
+int ultimoIndiceCasas = 0, ultimoIndiceApartamentos = 0, ultimoIndiceTerrenos = 0;
+
 
 int main(void){
+	int i;
 	
 	menu();	
 	
@@ -82,13 +86,13 @@ void menu(){
 	
 	
 	scanf("%d",&escolha);
-	
+	system("cls");
 	switch(escolha){
 		case 1:
 			cadastrar();
 			break;
 		case 2:
-			//consultar();
+			consultar();
 			break;
 		case 3:
 			//remover();
@@ -97,7 +101,7 @@ void menu(){
 			//editar();
 			break;
 		default:
-			printf("\nOpcao invalida...\n");
+			printf("Opcao invalida...\n");
 			menu();
 	}
 }
@@ -111,22 +115,58 @@ void cadastrar(){
 			struct Casa novaCasa;
 			inserirInformacoesGerais(&novaCasa.informacoes,&novaCasa.endereco);
 			inserirInformacoesCasa(&novaCasa);
-			mostrarCasa(&novaCasa);
+			
+			casas[ultimoIndiceCasas] = novaCasa;
+			ultimoIndiceCasas ++;
+			
+			printf("CADASTRO REALIZADO COM SUCESSO!");
+			
+			sleep(3);
+			
+			system("cls");
+			
+			menu();
+			//mostrarCasa(&casas[ultimoIndiceCasas-1]);
 			break;
 		case 2:
 			printf("=====CADASTRO DE APARTAMENTO=====\n");
 			struct Apartamento novoApartamento;
 			inserirInformacoesGerais(&novoApartamento.informacoes,&novoApartamento.endereco);
 			inserirInformacoesApartamento(&novoApartamento);
-			mostrarApartamento(&novoApartamento);
+			
+			apartamentos[ultimoIndiceApartamentos] = novoApartamento;
+			ultimoIndiceApartamentos ++;
+			
+			printf("CADASTRO REALIZADO COM SUCESSO!");
+			
+			sleep(3);
+			
+			system("cls");
+			
+			menu();
+			//mostrarApartamento(&apartamentos[ultimoIndiceApartamentos-1]);
 			break;
 		case 3:
 			printf("=====CADASTRO DE TERRENO=====\n");
 			struct Terreno novoTerreno;
 			inserirInformacoesGerais(&novoTerreno.informacoes,&novoTerreno.endereco);
 			inserirInformacoesTerreno(&novoTerreno);
-			mostrarTerreno(&novoTerreno);
+			
+			terrenos[ultimoIndiceTerrenos] = novoTerreno;
+			ultimoIndiceTerrenos ++;
+			
+			printf("CADASTRO REALIZADO COM SUCESSO!");
+			
+			sleep(3);
+			
+			system("cls");
+			
+			menu();
+			//mostrarTerreno(&terrenos[ultimoIndiceTerrenos-1]);
 			break;
+		case 4:
+			system("cls");
+			menu();
 			
 			
 	}
@@ -144,8 +184,9 @@ int menuCadastro(){
 	printf("Escolha: ");
 	
 	scanf("%d",&escolha);
+	system("cls");
 	if (escolha < 1 || escolha > 4){
-		printf("\nOpcao invalida...\n");
+		printf("Opcao invalida...\n");
 		escolha = menuCadastro();
 	}
 	return escolha;
@@ -293,6 +334,63 @@ int menuAluguelVenda(){
 		escolha = menuAluguelVenda();
 	}
 	return escolha;
+}
+
+
+void consultar(){
+	int consulta = menuConsulta();
+	int i;
+	char letra;
+	switch(consulta){
+		case 1:
+			fflush(stdin);
+			mostrarTudo();
+			printf("Digite qualquer tecla para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+		
+	}
+}
+int menuConsulta(){
+	int escolha;
+	printf("Que tipo de consulta deseja fazer?\n");
+	printf("1 - Mostrar todos os imoveis\n");
+	printf("2 - Buscar imovel por titulo\n");
+	printf("3 - Buscar imovel por bairro\n");
+	printf("4 - Buscar imovel acima de um valor\n");
+	printf("5 - Buscar os imoveis a venda por tipo de imovel\n");
+	printf("6 - Buscar os imoveis a aluguel por tipo de imovel\n");
+	printf("7 - Voltar\n");
+	scanf("%d",&escolha);
+	system("cls");
+	if(escolha < 1 || escolha > 6){
+		printf("Opcao invalida...\n");
+		escolha = menuConsulta();
+	}
+	return escolha;
+}
+
+void mostrarTudo(){
+	printf("=====CASAS=====\n");
+	int i;
+	for(i = 0;i<ultimoIndiceCasas;i++){
+		printf("\n");
+		mostrarCasa(&casas[i]);
+		printf("\n");
+	}
+	printf("=====APARTAMENTOS=====\n");
+	for(i = 0;i<ultimoIndiceApartamentos;i++){
+		printf("\n");
+		mostrarApartamento(&apartamentos[i]);
+		printf("\n");
+	}
+	printf("=====TERRENOS=====\n");
+	for(i = 0;i<ultimoIndiceTerrenos;i++){
+		printf("\n");
+		mostrarTerreno(&terrenos[i]);
+		printf("\n");
+	}
 }
 
 void mostrarInformacoes(struct Informacoes *informacoes){
