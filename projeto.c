@@ -54,18 +54,21 @@ int menuCadastro();
 void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco);
 void inserirInformacoesCasa(struct Casa *casa);
 int menuAluguelVenda();
+void mostrarInformacoes(struct Informacoes *informacoes);
+void mostrarEndereco(struct Endereco *endereco);
+void mostrarCasa(struct Casa *casa);
 
+struct Casa casas[999];
+struct Apartamento apartamentos[999];
+struct Terreno terrenos[999];
 
 int main(void){
-	
-	struct Casa casas[999];
-	struct Apartamento apartamentos[999];
-	struct Terreno terrenos[999];
 	
 	menu();	
 	
 	return 0;
 }
+
 void menu(){
 	int escolha;
 	
@@ -108,14 +111,28 @@ void cadastrar(){
 			struct Casa novaCasa;
 			inserirInformacoesGerais(&novaCasa.informacoes,&novaCasa.endereco);
 			inserirInformacoesCasa(&novaCasa);
+			mostrarCasa(&novaCasa);
 			break;
-		
-			
+		case 2:
+			printf("=====CADASTRO DE APARTAMENTO=====\n");
+			struct Apartamento novoApartamento;
+			inserirInformacoesGerais(&novoApartamento.informacoes,&novoApartamento.endereco);
+			inserirInformacoesApartamento(&novoApartamento);
+			mostrarApartamento(&novoApartamento);
+			break;
+		case 3:
+			printf("=====CADASTRO DE TERRENO=====\n");
+			struct Terreno novoTerreno;
+			inserirInformacoesGerais(&novoTerreno.informacoes,&novoTerreno.endereco);
+			inserirInformacoesTerreno(&novoTerreno);
+			mostrarTerreno(&novoTerreno);
+			break;
 			
 			
 	}
 	
 }
+
 int menuCadastro(){
 	int escolha;
 	
@@ -133,7 +150,6 @@ int menuCadastro(){
 	}
 	return escolha;
 }
-
 
 void inserirInformacoesCasa(struct Casa *casa){
 	int numeroDePavimentos, numeroDeQuartos;
@@ -165,6 +181,60 @@ void inserirInformacoesCasa(struct Casa *casa){
 	(*casa).areaConstruida = areaConstruida;	
 }
 
+void inserirInformacoesApartamento(struct Apartamento *apartamento){
+	double area, valorDoCondominio;
+	int numeroDeQuartos,andar,numeroDeVagasDeGaragem;
+	
+
+	printf("Titulo do Anuncio: ");
+	fgets((*apartamento).tituloDoAnuncio,30,stdin);
+	fflush(stdin);
+	
+	printf("Area: ");
+	scanf("%lf",&area);
+	fflush(stdin);
+	
+	printf("Numero de Quartos: ");
+	scanf("%d",&numeroDeQuartos);
+	fflush(stdin);
+	
+	printf("Posicao: ");
+	fgets((*apartamento).posicao,50,stdin);
+	fflush(stdin);
+	
+	printf("Andar: ");
+	scanf("%d",&andar);
+	fflush(stdin);
+	
+	printf("Valor do Condominio: R$ ");
+	scanf("%lf",&valorDoCondominio);
+	fflush(stdin);
+	
+	
+	printf("Numero de Vagas de Garagem: ");
+	scanf("%d",&numeroDeVagasDeGaragem);
+	fflush(stdin);
+	
+	
+	(*apartamento).area = area;
+	(*apartamento).numeroDeQuartos = numeroDeQuartos;
+	(*apartamento).andar = andar;
+	(*apartamento).valorDoCondominio = valorDoCondominio;
+	(*apartamento).numeroDeVagasDeGaragem = numeroDeVagasDeGaragem;
+}
+
+void inserirInformacoesTerreno(struct Terreno *terreno){
+	double area;
+	printf("Titulo do Anuncio: ");
+	fgets((*terreno).tituloDoAnuncio,30,stdin);
+	fflush(stdin);
+	
+	printf("Area: ");
+	scanf("%lf",&area);
+	fflush(stdin);
+	
+	(*terreno).area = area;	
+}
 
 void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco){
 	int aluguelOuVenda = menuAluguelVenda();
@@ -210,6 +280,7 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 	
 		
 }
+
 int menuAluguelVenda(){
 	int escolha;
 	printf("Voce quer: \n");
@@ -222,4 +293,59 @@ int menuAluguelVenda(){
 		escolha = menuAluguelVenda();
 	}
 	return escolha;
+}
+
+void mostrarInformacoes(struct Informacoes *informacoes){
+	if((*informacoes).aluguelOuVenda == ALUGUEL){
+		printf("Aluga-se\n");	
+	}else{
+		printf("Vende-se\n");
+	}
+	printf("Valor: R$ %.2lf\n",(*informacoes).valor);
+}
+
+void mostrarEndereco(struct Endereco *endereco){
+	printf("Rua: %s",(*endereco).rua);
+	printf("Numero: %d\n",(*endereco).numero);
+	printf("Bairro: %s",(*endereco).bairro);
+	printf("CEP: %s\n",(*endereco).CEP);
+	printf("Cidade: %s",(*endereco).cidade);
+}
+
+void mostrarCasa(struct Casa *casa){
+	printf("=====CASA=====\n");
+	
+	
+	printf("%s",(*casa).tituloDoAnuncio);
+	printf("Numero de Pavimentos: %d\n",(*casa).numeroDePavimentos);
+	printf("Numero de Quartos: %d\n",(*casa).numeroDeQuartos);
+	printf("Area do Terreno: %.1lf metros quadrados\n",(*casa).areaDoTerreno);
+	printf("Area Construida: %.1lf metros quadrados\n",(*casa).areaConstruida);
+	mostrarEndereco(&((*casa).endereco));
+	mostrarInformacoes(&((*casa).informacoes));
+}
+
+void mostrarApartamento(struct Apartamento *apartamento){
+	printf("=====APARTAMENTO=====\n");
+	
+	
+	printf("%s",(*apartamento).tituloDoAnuncio);
+	printf("Area: %.1lf metros quadrados\n",(*apartamento).area);
+	printf("Numero de quartos: %d\n",(*apartamento).numeroDeQuartos);
+	printf("Posicao: %s",(*apartamento).posicao);
+	printf("Andar: %d\n",(*apartamento).andar);
+	printf("Valor do condominio: R$ %.2lf\n",(*apartamento).valorDoCondominio);
+	printf("Numero de vagas de garagem: %d\n",(*apartamento).numeroDeVagasDeGaragem);
+	mostrarEndereco(&((*apartamento).endereco));
+	mostrarInformacoes(&((*apartamento).informacoes));
+}
+
+void mostrarTerreno(struct Terreno *terreno){
+	printf("=====TERRENO=====\n");
+	
+	
+	printf("%s",(*terreno).tituloDoAnuncio);
+	printf("Area: %.1lf metros quadrados\n",(*terreno).area);
+	mostrarEndereco(&((*terreno).endereco));
+	mostrarInformacoes(&((*terreno).informacoes));
 }
