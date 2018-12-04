@@ -283,6 +283,8 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 	int numero;
 	aluguelOuVenda = (aluguelOuVenda==1)? ALUGUEL : ((aluguelOuVenda==2)? VENDA : 3);
 	if(aluguelOuVenda == 3){
+		system("cls");
+		fflush(stdin);
 		menu();
 	}else{
 		
@@ -358,7 +360,41 @@ void consultar(){
 			system("cls");
 			menu();
 			break;	
-		
+		case 3:
+			fflush(stdin);
+			buscarPorBairro();
+			printf("Digite enter para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+			break;
+		case 4:
+			fflush(stdin);
+			buscarPorValor();
+			printf("Digite enter para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+			break;
+		case 5:
+			fflush(stdin);
+			buscarVendaPorTipo();
+			printf("Digite enter para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+			break;
+		case 6:
+			fflush(stdin);
+			buscarAluguelPorTipo();
+			printf("Digite enter para voltar...");
+			scanf("%c",&letra);
+			system("cls");
+			menu();
+		case 7:
+			fflush(stdin);
+			system("cls");
+			menu();
 	}
 }
 int menuConsulta(){
@@ -370,8 +406,9 @@ int menuConsulta(){
 	printf("3 - Buscar imovel por bairro\n");
 	printf("4 - Buscar imovel acima de um valor\n");
 	printf("5 - Buscar os imoveis a venda por tipo de imovel\n");
-	printf("6 - Buscar os imoveis a aluguel por tipo de imovel\n");
+	printf("6 - Butuscar os imoveis a aluguel por tipo de imovel\n");
 	printf("7 - Voltar\n");
+	printf("Sua escolha: ");
 	scanf("%d",&escolha);
 	fflush(stdin);
 	system("cls");
@@ -419,23 +456,21 @@ void buscarPorTitulo(){
 			qnt=1;
 		}
 	}
-	if(qnt == 0){
-		for(i=0;i<ultimoIndiceApartamentos;i++){
-			if(stricmp(titulo,apartamentos[i].tituloDoAnuncio)==0){
-				mostrarApartamento(&apartamentos[i]);
-				qnt = 1;
-			}
+	
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(stricmp(titulo,apartamentos[i].tituloDoAnuncio)==0){
+			mostrarApartamento(&apartamentos[i]);
+			qnt = 1;
 		}
-		if(qnt == 0){
-			for(i=0;i<ultimoIndiceTerrenos;i++){
-				if(stricmp(titulo,terrenos[i].tituloDoAnuncio)==0){
-					mostrarTerreno(&terrenos[i]);
-					qnt = 1;
-				}
-			}	
-		}
-		
 	}
+	
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(stricmp(titulo,terrenos[i].tituloDoAnuncio)==0){
+			mostrarTerreno(&terrenos[i]);
+			qnt = 1;
+		}
+	}	
+	
 	if(qnt == 0){
 		fflush(stdin);
 		char escolha;
@@ -452,6 +487,202 @@ void buscarPorTitulo(){
 		}else{
 			system("cls");
 			menu();
+		}
+	}
+}
+
+void buscarPorBairro(){
+	fflush(stdin);
+	char bairro[100];
+	int i,qnt=0;
+	printf("=====BUSCA POR BAIRRO=====\n");
+	printf("Bairro: ");
+	fgets(bairro,100,stdin);
+	fflush(stdin);
+	
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(stricmp(bairro,casas[i].endereco.bairro)==0){
+			mostrarCasa(&casas[i]);
+			qnt=1;
+		}
+	}
+	
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(stricmp(bairro,apartamentos[i].endereco.bairro)==0){
+			mostrarApartamento(&apartamentos[i]);
+			qnt = 1;
+		}
+	}
+	
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(stricmp(bairro,terrenos[i].endereco.bairro)==0){
+			mostrarTerreno(&terrenos[i]);
+			qnt = 1;
+		}
+	}	
+	
+	if(qnt == 0){
+		fflush(stdin);
+		char escolha;
+		system("cls");
+		printf("Nenhum item identificado...\n");
+		printf("Deseja realizar novamente a busca?\n");
+		printf("1 - Sim\n");
+		printf("Qualquer outra tecla - Nao\n");
+		printf("Sua escolha: ");
+		scanf("%c",&escolha);
+		if(escolha == '1'){
+			system("cls");
+			buscarPorBairro();
+		}else{
+			system("cls");
+			menu();
+		}
+	}
+}
+
+void buscarPorValor(){
+	fflush(stdin);
+	double valorMinimo;
+	int i,qnt=0;
+	printf("=====BUSCA POR VALOR MINIMO=====\n");
+	printf("Imoveis a partir de R$ ");
+	scanf("%lf",&valorMinimo);
+	fflush(stdin);
+	
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(casas[i].informacoes.valor >= valorMinimo){
+			mostrarCasa(&casas[i]);
+			qnt=1;
+		}
+	}
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(apartamentos[i].informacoes.valor >= valorMinimo){
+			mostrarApartamento(&apartamentos[i]);
+			qnt = 1;
+		}
+	}
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(terrenos[i].informacoes.valor >= valorMinimo){
+			mostrarTerreno(&terrenos[i]);
+			qnt = 1;
+		}
+	}	
+		
+	if(qnt == 0){
+		fflush(stdin);
+		char escolha;
+		system("cls");
+		printf("Nenhum item identificado...\n");
+		printf("Deseja realizar novamente a busca?\n");
+		printf("1 - Sim\n");
+		printf("Qualquer outra tecla - Nao\n");
+		printf("Sua escolha: ");
+		scanf("%c",&escolha);
+		if(escolha == '1'){
+			system("cls");
+			buscarPorBairro();
+		}else{
+			system("cls");
+			menu();
+		}
+	}
+}
+void buscarAluguelPorTipo(){
+	int tipo = menuBuscaAluguelTipo();
+	fflush(stdin);
+	switch(tipo){
+		case 1:
+			mostrarCasasPorTipo(ALUGUEL);
+			break;
+		case 2:
+			mostrarApartamentosPorTipo(ALUGUEL);
+			break;
+		case 3:
+			mostrarTerrenosPorTipo(ALUGUEL);
+			break;
+		case 4:
+			menu();
+	}
+}
+
+void buscarVendaPorTipo(){
+	int tipo = menuBuscaVendaTipo();
+	fflush(stdin);
+	switch(tipo){
+		case 1:
+			mostrarCasasPorTipo(VENDA);
+			break;
+		case 2:
+			mostrarApartamentosPorTipo(VENDA);
+			break;
+		case 3:
+			mostrarTerrenosPorTipo(VENDA);
+			break;
+		case 4:
+			menu();
+	}
+}
+int menuBuscaAluguelTipo(){
+	int escolha;
+	fflush(stdin);
+	system("cls");
+	printf("Buscar por que tipo de imovel a aluguel?\n");
+	printf("1 - Casa\n");
+	printf("2 - Apartamento\n");
+	printf("3 - Terreno\n");
+	printf("4 - Cancelar\n");
+	printf("Escolha: ");
+	scanf("%d",&escolha);
+	fflush(stdin);
+	system("cls");
+	if(escolha < 1 || escolha > 4){
+		printf("Opcao invalida...\n");
+		escolha = menuBuscaAluguelTipo();
+	}
+	return escolha;
+}
+int menuBuscaVendaTipo(){
+	int escolha;
+	fflush(stdin);
+	system("cls");
+	printf("Buscar por que tipo de imovel a venda?\n");
+	printf("1 - Casa\n");
+	printf("2 - Apartamento\n");
+	printf("3 - Terreno\n");
+	printf("4 - Cancelar\n");
+	printf("Escolha: ");
+	scanf("%d",&escolha);
+	fflush(stdin);
+	system("cls");
+	if(escolha < 1 || escolha > 4){
+		printf("Opcao invalida...\n");
+		escolha = menuBuscaVendaTipo();
+	}
+	return escolha;
+}
+
+void mostrarCasasPorTipo(int tipo){
+	int i;
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(casas[i].informacoes.aluguelOuVenda==tipo){
+			mostrarCasa(&casas[i]);
+		}
+	}
+}
+void mostrarApartamentosPorTipo(int tipo){
+	int i;
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(apartamentos[i].informacoes.aluguelOuVenda==tipo){
+			mostrarApartamento(&apartamentos[i]);
+		}
+	}	
+}
+void mostrarTerrenosPorTipo(int tipo){
+	int i;
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(terrenos[i].informacoes.aluguelOuVenda==tipo){
+			mostrarTerreno(&terrenos[i]);
 		}
 	}
 }
