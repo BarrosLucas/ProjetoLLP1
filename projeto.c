@@ -73,8 +73,69 @@ int ultimoIndiceCasas = 0, ultimoIndiceApartamentos = 0, ultimoIndiceTerrenos = 
 
 int main(void){
 	int i;
-	
 	menu();	
+/*
+	/*struct Casa novaCasa;
+	novaCasa.areaConstruida = 11;
+	novaCasa.areaDoTerreno = 12;
+	novaCasa.numeroDePavimentos = 3;
+	novaCasa.numeroDeQuartos = 5;
+	strcpy(novaCasa.tituloDoAnuncio,"Titulo Teste");
+	strcpy(novaCasa.endereco.bairro,"Bairro Teste");
+	strcpy(novaCasa.endereco.CEP,"11111-111");
+	strcpy(novaCasa.endereco.cidade,"Cidade Teste");
+	strcpy(novaCasa.endereco.rua,"Rua Teste");
+	novaCasa.endereco.numero = 100;
+	novaCasa.informacoes.aluguelOuVenda = 1;
+	novaCasa.informacoes.valor = 12;*/
+	
+	/*struct Apartamento novoApartamento;
+	novoApartamento.andar = 3;
+	novoApartamento.area = 2.5;
+	novoApartamento.numeroDeQuartos = 4;
+	novoApartamento.numeroDeVagasDeGaragem = 20;
+	novoApartamento.valorDoCondominio = 4.53;
+	strcpy(novoApartamento.tituloDoAnuncio,"Titulo Teste");
+	strcpy(novoApartamento.posicao,"Ali");
+	strcpy(novoApartamento.endereco.bairro,"Bairro Teste");
+	strcpy(novoApartamento.endereco.CEP,"33333-333");
+	strcpy(novoApartamento.endereco.cidade,"Cidade Teste");
+	strcpy(novoApartamento.endereco.rua,"Rua Teste");
+	novoApartamento.endereco.numero=3;
+	novoApartamento.informacoes.aluguelOuVenda = 1;
+	novoApartamento.informacoes.valor = 3.65;
+	
+	struct Terreno novoTerreno;
+	novoTerreno.area = 3.45;
+	strcpy(novoTerreno.tituloDoAnuncio,"Titulo Teste");
+	strcpy(novoTerreno.endereco.bairro,"Bairro Teste");
+	strcpy(novoTerreno.endereco.CEP,"33333-333");
+	strcpy(novoTerreno.endereco.cidade,"Cidade Teste");
+	strcpy(novoTerreno.endereco.rua,"Rua Teste");
+	novoTerreno.endereco.numero=3;
+	novoTerreno.informacoes.aluguelOuVenda = 0;
+	novoTerreno.informacoes.valor = 3.65;
+	
+	
+	char info[800];
+	strcpy(info,codificarTerreno(&novoTerreno));
+	printf("CODIFICADO:\n%s\n",info);
+	
+	struct Terreno terrenoCC;
+	
+	char newInfo[800];
+	printf("DECODIFICADO:\n");
+	decodificadorTerreno(info,&terrenoCC,800);
+	
+	char info[800];
+	strcpy(info,codificarCasa(&novaCasa));
+	printf("CODIFICADO:\n%s\n",info);
+	
+	printf("DECODIFICADO:\n");
+	
+	char newInfo[800];
+	decodificadorInformacoes(newInfo,&novaCasa,800);
+*/
 	
 	return 0;
 }
@@ -918,6 +979,490 @@ char * codificarEndereco(struct Endereco *endereco){
 	//printf("%s\n",ender);
 	
 	return ender;
+}
+
+
+void decodificadorTerreno(char terreno[], struct Terreno *novoTerreno, int tamanho){
+	/*
+	int aluguelOuVenda;
+	double valor;
+	*/
+	int ehComando = 0; //0 para não é comando | 1 para é comando
+	int i;
+	int aspas = 1; //0 aspas abertas | 1 aspas fechadas
+	char comando[30];
+	char valor[100];
+	int index;
+	int normal = 1;
+	int chave = 0;
+	int contChaves = 0;
+	char end[500];
+	char inf[100];
+	/*
+
+	char tituloDoAnuncio[30];
+	double area;
+	struct Endereco endereco;
+	struct Informacoes informacoes;
+
+
+	*/
+	for(i=0;(i<tamanho && terreno[i]!='\0');i++){
+		if(normal == 1){
+			if(terreno[i]=='"'){
+				if(aspas==0 && ehComando == 0){//as aspas estavam abertas, mas agora fechou e esta no valor do comando   "CEP":"11111-111"
+					if(strcmp(comando,"tituloDoAnuncio")==0){
+						strcpy(&(*novoTerreno).tituloDoAnuncio,valor);
+					}else if(strcmp(comando,"area")==0){
+						double numero = atof(valor);
+						(*novoTerreno).area = numero;
+					}
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index = 0;
+					aspas = 1;
+					//ehComando = 1;
+				}else if(aspas==0 && ehComando == 1){ //as aspas estavam abertas, mas agora fechou e está no comando    "CEP"
+					aspas = 1;
+					//ehComando = 0;
+					index = 0;
+				}else if(aspas==1 && ehComando == 0){ //as aspas estavam fechadas, mas agora abriu e está no valor do comando     "
+					aspas = 0;
+					ehComando = 1;
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index=0;
+				}else if(aspas==1 && ehComando == 1){ //as aspas estavam fechadas, mas agora abriu e está no comando    "CEP":"
+					aspas = 0;
+					ehComando = 0;
+				}
+			}else if(terreno[i]=='{'){
+				chave ++;
+				if(chave > 1){
+					if(contChaves==0){
+						end[0] = '{';	
+					}else{
+						inf[0] = '{';
+					}
+					index = 1;
+					normal = 0;
+					contChaves ++;
+				}
+			}else if(terreno[i]=='}'){
+				chave --;
+				if(chave == 0){
+					mostrarTerreno(&(*novoTerreno));
+				}
+			}else if(terreno[i] != '\n' && terreno[i] != ':' && terreno[i] != ','){
+				if(ehComando){
+					comando[index]=terreno[i];
+				}else{
+					valor[index]=terreno[i];
+				}
+				index ++;
+			}
+		}else{
+			
+			if(terreno[i] != '{' && terreno[i] != '}' && terreno != ','){
+				if(contChaves == 1){
+					end[index] = terreno[i];
+				}else if(contChaves == 2){
+					inf[index] = terreno[i];
+				}
+				index ++;
+			}else if(terreno[i] == '}'){
+				chave --;
+				if(contChaves == 1){
+					end[index] = '}';
+					decodificadorEndereco(end,&(*novoTerreno).endereco,500);
+					memset(end, 0, sizeof(end));
+					memset(inf, 0, sizeof(inf));
+					normal = 1;
+				}else if(contChaves == 2){
+					inf[index] = '}';
+					decodificadorInformacoes(inf,&(*novoTerreno).informacoes,100);
+				}
+				index = 0;
+				if(contChaves == 2){
+					normal = 1;
+				}
+			}else if(terreno[i] == '{'){
+				chave ++;
+				inf[index] = '{';
+			}
+		}
+	}
+}
+
+void decodificadorApartamento(char apartamento[], struct Apartamento *novoApartamento, int tamanho){
+	/*
+	int aluguelOuVenda;
+	double valor;
+	*/
+	int ehComando = 0; //0 para não é comando | 1 para é comando
+	int i;
+	int aspas = 1; //0 aspas abertas | 1 aspas fechadas
+	char comando[30];
+	char valor[100];
+	int index;
+	int normal = 1;
+	int chave = 0;
+	int contChaves = 0;
+	char end[500];
+	char inf[100];
+	/*
+
+	char tituloDoAnuncio[30];
+	double area;
+	int numeroDeQuartos;
+	char posicao[50];
+	int andar;
+	double valorDoCondominio;
+	int numeroDeVagasDeGaragem;
+	struct Endereco endereco;
+	struct Informacoes informacoes;
+
+
+	*/
+	for(i=0;(i<tamanho && apartamento[i]!='\0');i++){
+		if(normal == 1){
+			if(apartamento[i]=='"'){
+				if(aspas==0 && ehComando == 0){//as aspas estavam abertas, mas agora fechou e esta no valor do comando   "CEP":"11111-111"
+					if(strcmp(comando,"tituloDoAnuncio")==0){
+						strcpy(&(*novoApartamento).tituloDoAnuncio,valor);
+					}else if(strcmp(comando,"area")==0){
+						double numero = atof(valor);
+						(*novoApartamento).area = numero;
+					}else if(strcmp(comando,"numeroDeQuartos")==0){
+						int numero = atoi(valor);
+						(*novoApartamento).numeroDeQuartos = numero;
+					}else if(strcmp(comando,"posicao")==0){
+						strcpy(&(*novoApartamento).posicao,valor);
+					}else if(strcmp(comando,"andar")==0){
+						int numero = atoi(valor);
+						(*novoApartamento).andar = numero;
+					}else if(strcmp(comando,"valorDoCondominio")==0){
+						double numero = atof(valor);
+						(*novoApartamento).valorDoCondominio = numero;
+					}else if(strcmp(comando,"vagas")==0){
+						int numero = atoi(valor);
+						(*novoApartamento).numeroDeVagasDeGaragem = numero;
+					}
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index = 0;
+					aspas = 1;
+					//ehComando = 1;
+				}else if(aspas==0 && ehComando == 1){ //as aspas estavam abertas, mas agora fechou e está no comando    "CEP"
+					aspas = 1;
+					//ehComando = 0;
+					index = 0;
+				}else if(aspas==1 && ehComando == 0){ //as aspas estavam fechadas, mas agora abriu e está no valor do comando     "
+					aspas = 0;
+					ehComando = 1;
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index=0;
+				}else if(aspas==1 && ehComando == 1){ //as aspas estavam fechadas, mas agora abriu e está no comando    "CEP":"
+					aspas = 0;
+					ehComando = 0;
+				}
+			}else if(apartamento[i]=='{'){
+				chave ++;
+				if(chave > 1){
+					if(contChaves==0){
+						end[0] = '{';	
+					}else{
+						inf[0] = '{';
+					}
+					index = 1;
+					normal = 0;
+					contChaves ++;
+				}
+			}else if(apartamento[i]=='}'){
+				chave --;
+				if(chave == 0){
+					mostrarApartamento(&(*novoApartamento));
+				}
+			}else if(apartamento[i] != '\n' && apartamento[i] != ':' && apartamento[i] != ','){
+				if(ehComando){
+					comando[index]=apartamento[i];
+				}else{
+					valor[index]=apartamento[i];
+				}
+				index ++;
+			}
+		}else{
+			
+			if(apartamento[i] != '{' && apartamento[i] != '}' && apartamento != ','){
+				if(contChaves == 1){
+					end[index] = apartamento[i];
+				}else if(contChaves == 2){
+					inf[index] = apartamento[i];
+				}
+				index ++;
+			}else if(apartamento[i] == '}'){
+				chave --;
+				if(contChaves == 1){
+					end[index] = '}';
+					decodificadorEndereco(end,&(*novoApartamento).endereco,500);
+					memset(end, 0, sizeof(end));
+					memset(inf, 0, sizeof(inf));
+					normal = 1;
+				}else if(contChaves == 2){
+					inf[index] = '}';
+					decodificadorInformacoes(inf,&(*novoApartamento).informacoes,100);
+				}
+				index = 0;
+				if(contChaves == 2){
+					normal = 1;
+				}
+			}else if(apartamento[i] == '{'){
+				chave ++;
+				inf[index] = '{';
+			}
+		}
+	}
+}
+
+
+void decodificadorCasa(char casa[], struct Casa *novaCasa, int tamanho){
+	/*
+	int aluguelOuVenda;
+	double valor;
+	*/
+	int ehComando = 0; //0 para não é comando | 1 para é comando
+	int i;
+	int aspas = 1; //0 aspas abertas | 1 aspas fechadas
+	char comando[30];
+	char valor[100];
+	int index;
+	int normal = 1;
+	int chave = 0;
+	int contChaves = 0;
+	char end[500];
+	char inf[100];
+	/*
+	char tituloDoAnuncio[30];
+	int numeroDePavimentos;
+	int numeroDeQuartos;
+	double areaDoTerreno;
+	double areaConstruida;
+
+	*/
+	for(i=0;(i<tamanho && casa[i]!='\0');i++){
+		if(normal == 1){
+			if(casa[i]=='"'){
+				if(aspas==0 && ehComando == 0){//as aspas estavam abertas, mas agora fechou e esta no valor do comando   "CEP":"11111-111"
+					if(strcmp(comando,"tituloDoAnuncio")==0){
+						strcpy(&(*novaCasa).tituloDoAnuncio,valor);
+					}else if(strcmp(comando,"numeroDePavimentos")==0){
+						int numero = atoi(valor);
+						(*novaCasa).numeroDePavimentos = numero;
+					}else if(strcmp(comando,"numeroDeQuartos")==0){
+						int numero = atoi(valor);
+						(*novaCasa).numeroDeQuartos = numero;
+					}else if(strcmp(comando,"areaDoTerreno")==0){
+						double numero = atof(valor);
+						(*novaCasa).areaDoTerreno = numero;
+					}else if(strcmp(comando,"areaConstruida")==0){
+						double numero = atof(valor);
+						(*novaCasa).areaConstruida = numero;
+					}
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index = 0;
+					aspas = 1;
+					//ehComando = 1;
+				}else if(aspas==0 && ehComando == 1){ //as aspas estavam abertas, mas agora fechou e está no comando    "CEP"
+					aspas = 1;
+					//ehComando = 0;
+					index = 0;
+				}else if(aspas==1 && ehComando == 0){ //as aspas estavam fechadas, mas agora abriu e está no valor do comando     "
+					aspas = 0;
+					ehComando = 1;
+					memset(comando, 0, sizeof(comando));
+					memset(valor,0,sizeof(valor));
+					index=0;
+				}else if(aspas==1 && ehComando == 1){ //as aspas estavam fechadas, mas agora abriu e está no comando    "CEP":"
+					aspas = 0;
+					ehComando = 0;
+				}
+			}else if(casa[i]=='{'){
+				chave ++;
+				if(chave > 1){
+					if(contChaves==0){
+						end[0] = '{';	
+					}else{
+						inf[0] = '{';
+					}
+					index = 1;
+					normal = 0;
+					contChaves ++;
+				}
+			}else if(casa[i]=='}'){
+				chave --;
+				if(chave == 0){
+					mostrarCasa(&(*novaCasa));
+				}
+			}else if(casa[i] != '\n' && casa[i] != ':' && casa[i] != ','){
+				if(ehComando){
+					comando[index]=casa[i];
+				}else{
+					valor[index]=casa[i];
+				}
+				index ++;
+			}
+		}else{
+			
+			if(casa[i] != '{' && casa[i] != '}' && casa != ','){
+				if(contChaves == 1){
+					end[index] = casa[i];
+				}else if(contChaves == 2){
+					inf[index] = casa[i];
+				}
+				index ++;
+			}else if(casa[i] == '}'){
+				chave --;
+				if(contChaves == 1){
+					end[index] = '}';
+					decodificadorEndereco(end,&(*novaCasa).endereco,500);
+					memset(end, 0, sizeof(end));
+					memset(inf, 0, sizeof(inf));
+					normal = 1;
+				}else if(contChaves == 2){
+					inf[index] = '}';
+					decodificadorInformacoes(inf,&(*novaCasa).informacoes,100);
+				}
+				index = 0;
+				if(contChaves == 2){
+					normal = 1;
+				}
+			}else if(casa[i] == '{'){
+				chave ++;
+				inf[index] = '{';
+			}
+		}
+	}
+}
+
+void decodificadorInformacoes(char endereco[],struct Informacoes *informacoes, int tamanho){
+	/*
+	int aluguelOuVenda;
+	double valor;
+	*/
+	int ehComando = 0; //0 para não é comando | 1 para é comando
+	int i;
+	int aspas = 1; //0 aspas abertas | 1 aspas fechadas
+	char comando[30];
+	char valor[100];
+	int index;
+	int chave = 0;
+	for(i=0;(i<tamanho && endereco[i]!='\0');i++){
+		if(endereco[i]=='"'){
+			if(aspas==0 && ehComando == 0){//as aspas estavam abertas, mas agora fechou e esta no valor do comando   "CEP":"11111-111"
+				if(strcmp(comando,"aluguelOuVenda")==0){
+					int numero = atoi(valor);
+					(*informacoes).aluguelOuVenda = numero;
+				}else if(strcmp(comando,"valor")==0){
+					double numero = atof(valor);
+					(*informacoes).valor = numero;
+				}
+				memset(comando, 0, sizeof(comando));
+				memset(valor,0,sizeof(valor));
+				index = 0;
+				aspas = 1;
+				//ehComando = 1;
+			}else if(aspas==0 && ehComando == 1){ //as aspas estavam abertas, mas agora fechou e está no comando    "CEP"
+				aspas = 1;
+				//ehComando = 0;
+				index = 0;
+			}else if(aspas==1 && ehComando == 0){ //as aspas estavam fechadas, mas agora abriu e está no valor do comando     "
+				aspas = 0;
+				ehComando = 1;
+				memset(comando, 0, sizeof(comando));
+				memset(valor,0,sizeof(valor));
+				index=0;
+			}else if(aspas==1 && ehComando == 1){ //as aspas estavam fechadas, mas agora abriu e está no comando    "CEP":"
+				aspas = 0;
+				ehComando = 0;
+			}
+		}else if(endereco[i]=='{'){
+			chave ++;
+		}else if(endereco[i]=='}'){
+			chave --;
+			if(chave == 0){
+				//mostrarInformacoes(&(*informacoes));
+			}
+		}else if(endereco[i] != '\n' && endereco[i] != ':' && endereco[i] != ','){
+			if(ehComando){
+				comando[index]=endereco[i];
+			}else{
+				valor[index]=endereco[i];
+			}
+			index ++;
+		}
+	}
+}
+
+void decodificadorEndereco(char endereco[],struct Endereco *novoEndereco, int tamanho){
+	int ehComando = 0; //0 para não é comando | 1 para é comando
+	int i;
+	int aspas = 1; //0 aspas abertas | 1 aspas fechadas
+	char comando[30];
+	char valor[100];
+	int index;
+	int chave = 0;
+	for(i=0;(i<tamanho && endereco[i]!='\0');i++){
+		if(endereco[i]=='"'){
+			if(aspas==0 && ehComando == 0){//as aspas estavam abertas, mas agora fechou e esta no valor do comando   "CEP":"11111-111"
+				if(strcmp(comando,"rua")==0){
+					strcpy((*novoEndereco).rua,valor);
+				}else if(strcmp(comando,"numero")==0){
+					int numero = atoi(valor);
+					(*novoEndereco).numero = numero;
+				}else if(strcmp(comando,"bairro")==0){
+					strcpy((*novoEndereco).bairro,valor);
+				}else if(strcmp(comando,"CEP")==0){
+					strcpy((*novoEndereco).CEP,valor);
+				}else if(strcmp(comando,"cidade")==0){
+					strcpy((*novoEndereco).cidade,valor);
+				}
+				memset(comando, 0, sizeof(comando));
+				memset(valor,0,sizeof(valor));
+				index = 0;
+				aspas = 1;
+				//ehComando = 1;
+			}else if(aspas==0 && ehComando == 1){ //as aspas estavam abertas, mas agora fechou e está no comando    "CEP"
+				aspas = 1;
+				//ehComando = 0;
+				index = 0;
+			}else if(aspas==1 && ehComando == 0){ //as aspas estavam fechadas, mas agora abriu e está no valor do comando     "
+				aspas = 0;
+				ehComando = 1;
+				memset(comando, 0, sizeof(comando));
+				memset(valor,0,sizeof(valor));
+				index=0;
+			}else if(aspas==1 && ehComando == 1){ //as aspas estavam fechadas, mas agora abriu e está no comando    "CEP":"
+				aspas = 0;
+				ehComando = 0;
+			}
+		}else if(endereco[i]=='{'){
+			chave ++;
+		}else if(endereco[i]=='}'){
+			chave --;
+			if(chave == 0){
+				//mostrarEndereco(&(*novoEndereco));
+			}
+		}else if(endereco[i] != '\n' && endereco[i] != ':' && endereco[i] != ','){
+			if(ehComando){
+				comando[index]=endereco[i];
+			}else{
+				valor[index]=endereco[i];
+			}
+			index ++;
+		}
+	}	
 }
 
 int salvarCasa(struct Casa *casa){
