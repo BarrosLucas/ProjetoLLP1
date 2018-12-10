@@ -124,12 +124,17 @@ void cadastrar(){
 			continua = inserirInformacoesGerais(&novaCasa.informacoes,&novaCasa.endereco);
 			if(!continua){
 				inserirInformacoesCasa(&novaCasa);	
-				casas[ultimoIndiceCasas] = novaCasa;
-				ultimoIndiceCasas ++;
+				if(salvarCasa(&novaCasa)){
+					casas[ultimoIndiceCasas] = novaCasa;
+					ultimoIndiceCasas ++;
+					printf("CADASTRO REALIZADO COM SUCESSO!");	
+				}else{
+					printf("Falha no cadastro...\n");
+				}
 				//char strCasa[800];
 				//strcpy(strCasa,codificarCasa(&novaCasa));
 				//printf("%s",strCasa);
-				printf("CADASTRO REALIZADO COM SUCESSO!");
+				
 				
 			}else{
 				printf("Ja existe um imovel cadastrado nesse endereco...\n");
@@ -150,13 +155,18 @@ void cadastrar(){
 			if(!continua){
 				inserirInformacoesApartamento(&novoApartamento);
 				
-				apartamentos[ultimoIndiceApartamentos] = novoApartamento;
-				ultimoIndiceApartamentos ++;
+				if(salvarApartamento(&novoApartamento)){
+					apartamentos[ultimoIndiceApartamentos] = novoApartamento;
+					ultimoIndiceApartamentos ++;
+					printf("CADASTRO REALIZADO COM SUCESSO!");		
+				}else{
+					printf("Falha no cadastro...\n");
+				}
 				//char strAp[800];
 				//strcpy(strAp,codificarApartamento(&novoApartamento));
 				//printf("%s",strAp);
 				
-				printf("CADASTRO REALIZADO COM SUCESSO!");	
+				
 			}else{
 				printf("Ja existe um imovel cadastrado nesse endereco...\n");
 			}
@@ -176,15 +186,19 @@ void cadastrar(){
 			if(!continua){
 				inserirInformacoesTerreno(&novoTerreno);
 				
-				terrenos[ultimoIndiceTerrenos] = novoTerreno;
-				ultimoIndiceTerrenos ++;
-				
+				if(salvarTerreno(&novoApartamento)){
+					terrenos[ultimoIndiceTerrenos] = novoTerreno;
+					ultimoIndiceTerrenos ++;
+					printf("CADASTRO REALIZADO COM SUCESSO!");		
+				}else{
+					printf("Falha no cadastro...\n");
+				}
 				//char strTer[800];
 				//strcpy(strTer,codificarTerreno(&novoTerreno));
 				//printf("%s",strTer);
 
 				
-				printf("CADASTRO REALIZADO COM SUCESSO!");	
+				
 			}else{
 				printf("Ja existe um imovel cadastrado nesse endereco...\n");
 			}
@@ -906,6 +920,45 @@ char * codificarEndereco(struct Endereco *endereco){
 	return ender;
 }
 
+int salvarCasa(struct Casa *casa){
+	int retorno = 0;
+	FILE *fp;
+	char cas[800];
+	strcpy(cas,codificarCasa(&(*casa)));
+	if ((fp=fopen ("persistencia/casas.txt","a")) != NULL) {
+		retorno = (fprintf(fp,cas)==EOF)?0:1;
+ 	}
+ 	fclose(fp);
+ 	
+ 	return retorno;
+
+}
+
+int salvarApartamento(struct Apartamento *apartamento){
+	int retorno = 0;
+	FILE *fp;
+	char ap[800];
+	strcpy(ap,codificarApartamento(&(*apartamento)));
+	if ((fp=fopen ("persistencia/apartamentos.txt","a")) != NULL) {
+		retorno = (fprintf(fp,ap)==EOF)?0:1;
+ 	}
+ 	fclose(fp);
+ 	
+ 	return retorno;
+}
+
+int salvarTerreno(struct Terreno *terreno){
+	int retorno = 0;
+	FILE *fp;
+	char ter[800];
+	strcpy(ter,codificarTerreno(&(*terreno)));
+	if ((fp=fopen ("persistencia/terrenos.txt","a")) != NULL) {
+		retorno = (fprintf(fp,ter)==EOF)?0:1;
+ 	}
+ 	fclose(fp);
+ 	
+ 	return retorno;
+}
 
 void mostrarCasasPorTipo(int tipo){
 	int i;
