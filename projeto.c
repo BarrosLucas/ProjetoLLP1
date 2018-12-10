@@ -52,12 +52,18 @@ struct Terreno{
 void menu();
 void cadastrar();
 int menuCadastro();
-void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco);
+int inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco);
 void inserirInformacoesCasa(struct Casa *casa);
 int menuAluguelVenda();
 void mostrarInformacoes(struct Informacoes *informacoes);
 void mostrarEndereco(struct Endereco *endereco);
 void mostrarCasa(struct Casa *casa);
+
+char * codificarEndereco(struct Endereco *endereco);
+char * codificarInformacoes(struct Informacoes *informacoes);
+char * codificarCasa(struct Casa *casa);
+char * codificarApartamento(struct Apartamento *apartamento);
+char * codificarTerreno(struct Terreno *terreno);
 
 struct Casa casas[999];
 struct Apartamento apartamentos[999];
@@ -108,20 +114,28 @@ void menu(){
 
 void cadastrar(){
 	int opcao = menuCadastro();
+	int continua=0;
 	
 	switch(opcao){
 		case 1:
+		
 			printf("=====CADASTRO DE CASA=====\n");
 			struct Casa novaCasa;
-			inserirInformacoesGerais(&novaCasa.informacoes,&novaCasa.endereco);
-			inserirInformacoesCasa(&novaCasa);
-			
-			casas[ultimoIndiceCasas] = novaCasa;
-			ultimoIndiceCasas ++;
-			
-			printf("CADASTRO REALIZADO COM SUCESSO!");
-			
-			sleep(3);
+			continua = inserirInformacoesGerais(&novaCasa.informacoes,&novaCasa.endereco);
+			if(!continua){
+				inserirInformacoesCasa(&novaCasa);	
+				casas[ultimoIndiceCasas] = novaCasa;
+				ultimoIndiceCasas ++;
+				//char strCasa[800];
+				//strcpy(strCasa,codificarCasa(&novaCasa));
+				//printf("%s",strCasa);
+				printf("CADASTRO REALIZADO COM SUCESSO!");
+				
+			}else{
+				printf("Ja existe um imovel cadastrado nesse endereco...\n");
+				
+			}
+			sleep(3);	
 			
 			system("cls");
 			
@@ -131,13 +145,22 @@ void cadastrar(){
 		case 2:
 			printf("=====CADASTRO DE APARTAMENTO=====\n");
 			struct Apartamento novoApartamento;
-			inserirInformacoesGerais(&novoApartamento.informacoes,&novoApartamento.endereco);
-			inserirInformacoesApartamento(&novoApartamento);
+			continua = inserirInformacoesGerais(&novoApartamento.informacoes,&novoApartamento.endereco);
 			
-			apartamentos[ultimoIndiceApartamentos] = novoApartamento;
-			ultimoIndiceApartamentos ++;
+			if(!continua){
+				inserirInformacoesApartamento(&novoApartamento);
+				
+				apartamentos[ultimoIndiceApartamentos] = novoApartamento;
+				ultimoIndiceApartamentos ++;
+				//char strAp[800];
+				//strcpy(strAp,codificarApartamento(&novoApartamento));
+				//printf("%s",strAp);
+				
+				printf("CADASTRO REALIZADO COM SUCESSO!");	
+			}else{
+				printf("Ja existe um imovel cadastrado nesse endereco...\n");
+			}
 			
-			printf("CADASTRO REALIZADO COM SUCESSO!");
 			
 			sleep(3);
 			
@@ -149,13 +172,23 @@ void cadastrar(){
 		case 3:
 			printf("=====CADASTRO DE TERRENO=====\n");
 			struct Terreno novoTerreno;
-			inserirInformacoesGerais(&novoTerreno.informacoes,&novoTerreno.endereco);
-			inserirInformacoesTerreno(&novoTerreno);
+			continua = inserirInformacoesGerais(&novoTerreno.informacoes,&novoTerreno.endereco);
+			if(!continua){
+				inserirInformacoesTerreno(&novoTerreno);
+				
+				terrenos[ultimoIndiceTerrenos] = novoTerreno;
+				ultimoIndiceTerrenos ++;
+				
+				//char strTer[800];
+				//strcpy(strTer,codificarTerreno(&novoTerreno));
+				//printf("%s",strTer);
+
+				
+				printf("CADASTRO REALIZADO COM SUCESSO!");	
+			}else{
+				printf("Ja existe um imovel cadastrado nesse endereco...\n");
+			}
 			
-			terrenos[ultimoIndiceTerrenos] = novoTerreno;
-			ultimoIndiceTerrenos ++;
-			
-			printf("CADASTRO REALIZADO COM SUCESSO!");
 			
 			sleep(3);
 			
@@ -198,6 +231,7 @@ void inserirInformacoesCasa(struct Casa *casa){
 
 	printf("Titulo do Anuncio: ");
 	fgets((*casa).tituloDoAnuncio,30,stdin);
+	(*casa).tituloDoAnuncio[strcspn((*casa).tituloDoAnuncio, "\n")] = '\0';
 	fflush(stdin);
 	
 	printf("Numero de Pavimentos: ");
@@ -229,6 +263,7 @@ void inserirInformacoesApartamento(struct Apartamento *apartamento){
 
 	printf("Titulo do Anuncio: ");
 	fgets((*apartamento).tituloDoAnuncio,30,stdin);
+	(*apartamento).tituloDoAnuncio[strcspn((*apartamento).tituloDoAnuncio, "\n")] = '\0';
 	fflush(stdin);
 	
 	printf("Area: ");
@@ -241,6 +276,7 @@ void inserirInformacoesApartamento(struct Apartamento *apartamento){
 	
 	printf("Posicao: ");
 	fgets((*apartamento).posicao,50,stdin);
+	(*apartamento).posicao[strcspn((*apartamento).posicao, "\n")] = '\0';
 	fflush(stdin);
 	
 	printf("Andar: ");
@@ -268,6 +304,7 @@ void inserirInformacoesTerreno(struct Terreno *terreno){
 	double area;
 	printf("Titulo do Anuncio: ");
 	fgets((*terreno).tituloDoAnuncio,30,stdin);
+	(*terreno).tituloDoAnuncio[strcspn((*terreno).tituloDoAnuncio, "\n")] = '\0';
 	fflush(stdin);
 	
 	printf("Area: ");
@@ -277,7 +314,8 @@ void inserirInformacoesTerreno(struct Terreno *terreno){
 	(*terreno).area = area;	
 }
 
-void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco){
+int inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco){
+	int retorno = 1; //0 = SUCESSO | 1 = INSUCESSO
 	int aluguelOuVenda = menuAluguelVenda();
 	double valor;
 	int numero;
@@ -286,6 +324,7 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 		system("cls");
 		fflush(stdin);
 		menu();
+		return retorno;
 	}else{
 		
 		printf("Valor: R$ ");
@@ -294,6 +333,7 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 		
 		printf("Rua: ");
 		fgets((*endereco).rua,100,stdin);
+		(*endereco).rua[strcspn((*endereco).rua, "\n")] = '\0';
 		fflush(stdin);
 		
 		printf("Numero: ");
@@ -302,14 +342,17 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 		
 		printf("Bairro: ");
 		fgets((*endereco).bairro,100,stdin);
+		(*endereco).bairro[strcspn((*endereco).bairro, "\n")] = '\0';
 		fflush(stdin);
 		
 		printf("CEP: ");
 		fgets((*endereco).CEP,10,stdin);
+		(*endereco).CEP[strcspn((*endereco).CEP, "\n")] = '\0';
 		fflush(stdin);
 		
 		printf("Cidade: ");
 		fgets((*endereco).cidade,100,stdin);
+		(*endereco).cidade[strcspn((*endereco).cidade, "\n")] = '\0';
 		fflush(stdin);
 		
 		
@@ -318,8 +361,14 @@ void inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *
 		
 		(*endereco).numero = numero;
 		
+		//char ender[100];
 		
+		//strcpy(ender,codificarInformacoes(&(*informacoes)));
+		//printf("%s\n",ender);
+		
+		return jaExisteEndereco(&(*endereco));
 	}
+	return 1;
 	
 		
 }
@@ -662,6 +711,202 @@ int menuBuscaVendaTipo(){
 	return escolha;
 }
 
+
+int jaExisteTitulo(char titulo[]){
+	int i;
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(stricmp(titulo,casas[i].tituloDoAnuncio)==0){
+			return 1;
+		}
+	}
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(stricmp(titulo,apartamentos[i].tituloDoAnuncio)==0){
+			return 1;
+		}
+	}
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(stricmp(titulo,terrenos[i].tituloDoAnuncio)==0){
+			return 1;
+		}
+	}
+	return 0;
+}
+
+int jaExisteEndereco(struct Endereco *endereco){
+	int i = 0;
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(!stricmp((*endereco).bairro,casas[i].endereco.bairro) && !stricmp((*endereco).CEP,casas[i].endereco.CEP) && !stricmp((*endereco).cidade,casas[i].endereco.cidade) && !stricmp((*endereco).rua,casas[i].endereco.rua) && (*endereco).numero == casas[i].endereco.numero){
+			return 1;
+		}
+	}
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(!stricmp((*endereco).bairro,apartamentos[i].endereco.bairro) && !stricmp((*endereco).CEP,apartamentos[i].endereco.CEP) && !stricmp((*endereco).cidade,apartamentos[i].endereco.cidade) && !stricmp((*endereco).rua,apartamentos[i].endereco.rua) && (*endereco).numero == apartamentos[i].endereco.numero){
+			return 1;
+		}
+	}
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(!stricmp((*endereco).bairro,terrenos[i].endereco.bairro) && !stricmp((*endereco).CEP,terrenos[i].endereco.CEP) && !stricmp((*endereco).cidade,terrenos[i].endereco.cidade) && !stricmp((*endereco).rua,terrenos[i].endereco.rua) && (*endereco).numero == terrenos[i].endereco.numero){
+			return 1;
+		}
+	}
+	return 0;
+}
+
+char * codificarTerreno(struct Terreno *terreno){
+	char area[7],endereco[500],informacoes[100];
+	/*
+	struct Terreno{
+		char tituloDoAnuncio[30];
+		double area;
+		struct Endereco endereco;
+		struct Informacoes informacoes;
+	};
+	*/	
+	sprintf(area,"%.1lf",(*terreno).area);
+	strcpy(endereco,codificarEndereco(&((*terreno).endereco)));
+	strcpy(informacoes,codificarInformacoes(&((*terreno).informacoes)));
+	
+	const char ter[800] = "{\n";
+	strcat(ter,"\"tituloDoAnuncio\":\"");
+	strcat(ter,(*terreno).tituloDoAnuncio);
+	strcat(ter,"\",\n\"area\":\"");
+	strcat(ter,area);
+	strcat(ter,"\",\n\"endereco\":\n");
+	strcat(ter,endereco);
+	strcat(ter,",\n\"informacoes\":\n");
+	strcat(ter,informacoes);
+	strcat(ter,"\n}");
+	
+	return ter;
+}
+
+char * codificarApartamento(struct Apartamento *apartamento){
+	char area[7],quartos[3],andar[3],condominio[12],vagas[4],endereco[500],informacoes[100];
+	sprintf(area,"%.1lf",(*apartamento).area);
+	sprintf(quartos,"%d",(*apartamento).numeroDeQuartos);
+	sprintf(andar,"%d",(*apartamento).andar);
+	sprintf(condominio,"%.2lf",(*apartamento).valorDoCondominio);
+	sprintf(vagas,"%d",(*apartamento).numeroDeVagasDeGaragem);
+	strcpy(endereco,codificarEndereco(&((*apartamento).endereco)));
+	strcpy(informacoes,codificarInformacoes(&((*apartamento).informacoes)));
+	/*
+	struct Apartamento{
+		char tituloDoAnuncio[30];
+		double area; -> 7
+		int numeroDeQuartos; -> 3
+		char posicao[50];
+		int andar; -> 3 
+		double valorDoCondominio; -> 12
+		int numeroDeVagasDeGaragem; -> 4
+		struct Endereco endereco; -> 500
+		struct Informacoes informacoes; -> 100
+	};
+	*/
+	const char ap[800] = "{\n";
+	strcat(ap,"\"tituloDoAnuncio\":\"");
+	strcat(ap,(*apartamento).tituloDoAnuncio);
+	strcat(ap,"\",\n\"area\":\"");
+	strcat(ap,area);
+	strcat(ap,"\",\n\"numeroDeQuartos\":\"");
+	strcat(ap,quartos);
+	strcat(ap,"\",\n\"posicao\":\"");
+	strcat(ap,(*apartamento).posicao);
+	strcat(ap,"\",\n\"andar\":\"");
+	strcat(ap,andar);
+	strcat(ap,"\",\n\"valorDoCondominio\":\"");
+	strcat(ap,condominio);
+	strcat(ap,"\",\n\"vagas\":\"");
+	strcat(ap,vagas);
+	strcat(ap,"\",\n\"endereco\":\n");
+	strcat(ap,endereco);
+	strcat(ap,",\n\"informacoes\":\n");
+	strcat(ap,informacoes);
+	strcat(ap,"\n}");
+	
+	return ap;
+}
+
+
+char * codificarCasa(struct Casa *casa){
+	char pavimentos[3],quartos[3],terreno[7],construcao[7],endereco[500],info[100];
+	/*
+	struct Casa{
+		char tituloDoAnuncio[30];
+		int numeroDePavimentos; -> 3
+		int numeroDeQuartos; -> 3
+		double areaDoTerreno; -> 7
+		double areaConstruida; -> 7
+		struct Endereco endereco; -> 500
+		struct Informacoes informacoes; -> 100
+	};
+	*/
+	sprintf(pavimentos,"%d",(*casa).numeroDePavimentos);
+	sprintf(quartos,"%d",(*casa).numeroDeQuartos);
+	sprintf(terreno,"%.1lf",(*casa).areaDoTerreno);
+	sprintf(construcao,"%.1lf",(*casa).areaConstruida);
+	strcpy(endereco,codificarEndereco(&((*casa).endereco)));
+	strcpy(info,codificarInformacoes(&((*casa).informacoes)));
+	
+	
+	const char cas[800] = "{\n";
+	strcat(cas,"\"tituloDoAnuncio\":\"");
+	strcat(cas,(*casa).tituloDoAnuncio);
+	strcat(cas,"\",\n\"numeroDePavimentos\":\"");
+	strcat(cas,pavimentos);
+	strcat(cas,"\",\n\"numeroDeQuartos\":\"");
+	strcat(cas,quartos);
+	strcat(cas,"\",\n\"areaDoTerreno\":\"");
+	strcat(cas,terreno);
+	strcat(cas,"\",\n\"areaConstruida\":\"");
+	strcat(cas,construcao);
+	strcat(cas,"\",\n\"endereco\":\n");
+	strcat(cas,endereco);
+	strcat(cas,",\n\"informacoes\":\n");
+	strcat(cas,info);
+	strcat(cas,"\n}");
+	
+	return cas;
+}
+
+
+char * codificarInformacoes(struct Informacoes * informacoes){
+	char info[1],valor[12];
+	sprintf(info,"%d",(*informacoes).aluguelOuVenda);
+	sprintf(valor,"%.2lf",(*informacoes).valor);
+	
+	const char inform[100] = "{\n";
+	strcat(inform,"\"aluguelOuVenda\":\"");
+	strcat(inform,info);
+	strcat(inform,"\",\n\"valor\":\"");
+	strcat(inform,valor);
+	strcat(inform,"\"\n}");
+	
+	return inform;
+}
+
+char * codificarEndereco(struct Endereco *endereco){
+	
+	char numero[5];
+	sprintf(numero,"%d",(*endereco).numero);
+	
+	static char ender[500] = "{\n";
+	strcat(ender,"\"rua\":\"");
+	strcat(ender,(*endereco).rua);
+	strcat(ender,"\",\n\"numero\":\"");
+	strcat(ender,numero);
+	strcat(ender,"\",\n\"bairro\":\"");
+	strcat(ender,(*endereco).bairro);
+	strcat(ender,"\",\n\"CEP\":\"");
+	strcat(ender,(*endereco).CEP);
+	strcat(ender,"\",\n\"cidade\":\"");
+	strcat(ender,(*endereco).cidade);
+	strcat(ender,"\"\n}");
+	//printf("%s\n",ender);
+	
+	return ender;
+}
+
+
 void mostrarCasasPorTipo(int tipo){
 	int i;
 	for(i=0;i<ultimoIndiceCasas;i++){
@@ -686,7 +931,6 @@ void mostrarTerrenosPorTipo(int tipo){
 		}
 	}
 }
-
 void mostrarInformacoes(struct Informacoes *informacoes){
 	if((*informacoes).aluguelOuVenda == ALUGUEL){
 		printf("Aluga-se\n");	
@@ -695,20 +939,18 @@ void mostrarInformacoes(struct Informacoes *informacoes){
 	}
 	printf("Valor: R$ %.2lf\n",(*informacoes).valor);
 }
-
 void mostrarEndereco(struct Endereco *endereco){
-	printf("Rua: %s",(*endereco).rua);
+	printf("Rua: %s\n",(*endereco).rua);
 	printf("Numero: %d\n",(*endereco).numero);
-	printf("Bairro: %s",(*endereco).bairro);
+	printf("Bairro: %s\n",(*endereco).bairro);
 	printf("CEP: %s\n",(*endereco).CEP);
-	printf("Cidade: %s",(*endereco).cidade);
+	printf("Cidade: %s\n",(*endereco).cidade);
 }
-
 void mostrarCasa(struct Casa *casa){
 	printf("=====CASA=====\n");
 	
 	
-	printf("%s",(*casa).tituloDoAnuncio);
+	printf("%s\n",(*casa).tituloDoAnuncio);
 	printf("Numero de Pavimentos: %d\n",(*casa).numeroDePavimentos);
 	printf("Numero de Quartos: %d\n",(*casa).numeroDeQuartos);
 	printf("Area do Terreno: %.1lf metros quadrados\n",(*casa).areaDoTerreno);
@@ -716,27 +958,25 @@ void mostrarCasa(struct Casa *casa){
 	mostrarEndereco(&((*casa).endereco));
 	mostrarInformacoes(&((*casa).informacoes));
 }
-
 void mostrarApartamento(struct Apartamento *apartamento){
 	printf("=====APARTAMENTO=====\n");
 	
 	
-	printf("%s",(*apartamento).tituloDoAnuncio);
+	printf("%s\n",(*apartamento).tituloDoAnuncio);
 	printf("Area: %.1lf metros quadrados\n",(*apartamento).area);
 	printf("Numero de quartos: %d\n",(*apartamento).numeroDeQuartos);
-	printf("Posicao: %s",(*apartamento).posicao);
+	printf("Posicao: %s\n",(*apartamento).posicao);
 	printf("Andar: %d\n",(*apartamento).andar);
 	printf("Valor do condominio: R$ %.2lf\n",(*apartamento).valorDoCondominio);
 	printf("Numero de vagas de garagem: %d\n",(*apartamento).numeroDeVagasDeGaragem);
 	mostrarEndereco(&((*apartamento).endereco));
 	mostrarInformacoes(&((*apartamento).informacoes));
 }
-
 void mostrarTerreno(struct Terreno *terreno){
 	printf("=====TERRENO=====\n");
 	
 	
-	printf("%s",(*terreno).tituloDoAnuncio);
+	printf("%s\n",(*terreno).tituloDoAnuncio);
 	printf("Area: %.1lf metros quadrados\n",(*terreno).area);
 	mostrarEndereco(&((*terreno).endereco));
 	mostrarInformacoes(&((*terreno).informacoes));
