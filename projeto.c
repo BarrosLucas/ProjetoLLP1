@@ -170,7 +170,7 @@ void menu(){
 			remover();
 			break;
 		case 4:
-			//editar();
+			atualizar();
 			break;
 		default:
 			printf("Opcao invalida...\n");
@@ -310,6 +310,9 @@ int menuCadastro(){
 }
 
 void inserirInformacoesCasa(struct Casa *casa){
+	fflush(stdin);
+	memset((*casa).tituloDoAnuncio, 0, sizeof((*casa).tituloDoAnuncio));
+	
 	int numeroDePavimentos, numeroDeQuartos;
 	double areaDoTerreno, areaConstruida;
 
@@ -341,9 +344,12 @@ void inserirInformacoesCasa(struct Casa *casa){
 }
 
 void inserirInformacoesApartamento(struct Apartamento *apartamento){
+	fflush(stdin);
+	memset((*apartamento).tituloDoAnuncio, 0, sizeof((*apartamento).tituloDoAnuncio));
+	memset((*apartamento).posicao, 0, sizeof((*apartamento).posicao));
+	
 	double area, valorDoCondominio;
 	int numeroDeQuartos,andar,numeroDeVagasDeGaragem;
-	
 
 	printf("Titulo do Anuncio: ");
 	fgets((*apartamento).tituloDoAnuncio,30,stdin);
@@ -385,6 +391,9 @@ void inserirInformacoesApartamento(struct Apartamento *apartamento){
 }
 
 void inserirInformacoesTerreno(struct Terreno *terreno){
+	fflush(stdin);
+	memset((*terreno).tituloDoAnuncio, 0, sizeof((*terreno).tituloDoAnuncio));
+	
 	double area;
 	printf("Titulo do Anuncio: ");
 	fgets((*terreno).tituloDoAnuncio,30,stdin);
@@ -399,6 +408,7 @@ void inserirInformacoesTerreno(struct Terreno *terreno){
 }
 
 int inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *endereco){
+	fflush(stdin);
 	int retorno = 1; //0 = SUCESSO | 1 = INSUCESSO
 	int aluguelOuVenda = menuAluguelVenda();
 	double valor;
@@ -410,6 +420,11 @@ int inserirInformacoesGerais(struct Informacoes *informacoes, struct Endereco *e
 		menu();
 		return retorno;
 	}else{
+		/*memset((*endereco).rua, 0, sizeof((*endereco).rua));
+		memset((*endereco).bairro, 0, sizeof((*endereco).bairro));
+		memset((*endereco).CEP, 0, sizeof((*endereco).CEP));
+		memset((*endereco).cidade, 0, sizeof((*endereco).cidade));*/
+		
 		
 		printf("Valor: R$ ");
 		scanf("%lf",&valor);
@@ -797,6 +812,118 @@ int menuBuscaVendaTipo(){
 		escolha = menuBuscaVendaTipo();
 	}
 	return escolha;
+}
+
+void atualizar(){
+	int num;
+	struct Endereco endereco;
+	printf("=====ATUALIZAR=====\n");
+	printf("Informe o endereco do imovel...\n");
+	
+	printf("Rua: ");
+	fgets(endereco.rua,100,stdin);
+	endereco.rua[strcspn(endereco.rua, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("Numero: ");
+	scanf("%d",&num);
+	endereco.numero = num;
+	fflush(stdin);
+	
+	printf("Bairro: ");
+	fgets(endereco.bairro,100,stdin);
+	endereco.bairro[strcspn(endereco.bairro, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("CEP: ");
+	fgets(endereco.CEP,10,stdin);
+	endereco.CEP[strcspn(endereco.CEP, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("Cidade: ");
+	fgets(endereco.cidade,100,stdin);
+	endereco.cidade[strcspn(endereco.cidade, "\n")] = '\0';
+	fflush(stdin);
+	
+	int vaiEditar = jaExisteEndereco(&endereco);
+	if(vaiEditar != 0){
+		int index,escolha;
+		switch(vaiEditar){
+			case 1:
+				index = buscarCasaPorEndereco(&endereco);
+				printf("Deseja mesmo editar esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					memset(casas[index].tituloDoAnuncio, 0, sizeof(casas[index].tituloDoAnuncio));
+			 		//memset(casas[index].endereco.bairro, 0, sizeof(casas[index].endereco.bairro));
+			 		//memset(casas[index].endereco.CEP, 0, sizeof(casas[index].endereco.CEP));
+			 		//memset(casas[index].endereco.cidade, 0, sizeof(casas[index].endereco.cidade));
+			 		//memset(casas[index].endereco.rua, 0, sizeof(casas[index].endereco.rua));
+					
+					
+					inserirInformacoesCasa(&(casas[index]));
+					
+					//casas[index] = casas[ultimoIndiceCasas-1];
+					//ultimoIndiceCasas--;
+					if(salvarArrayDeCasasNoArquivo()){
+						printf("Casa atualizada com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na atualizacao.\n");
+					}
+					//Deletar do array e do arquivo
+				}
+				//Mostrar casa
+				break;
+			case 2:
+				index = buscarApartamentoPorEndereco(&endereco);
+				printf("Deseja mesmo editar esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					memset(apartamentos[index].tituloDoAnuncio, 0, sizeof(apartamentos[index].tituloDoAnuncio));
+					memset(apartamentos[index].posicao, 0, sizeof(apartamentos[index].posicao));
+					//apartamentos[index] = apartamentos[ultimoIndiceApartamentos-1];
+					//ultimoIndiceApartamentos--;
+					
+					inserirInformacoesApartamento(&(apartamentos[index]));
+					
+					//casas[index] = casas[ultimoIndiceCasas-1];
+					//ultimoIndiceCasas--;
+					if(salvarArrayDeApartamentosNoArquivo()){
+						printf("Apartamento atualizado com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na atualizacao.\n");
+					}
+				}
+				//Mostrar apartamento
+				break;
+			case 3:
+				index = buscarTerrenoPorEndereco(&endereco);
+				printf("Deseja mesmo atualizar esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					memset(terrenos[index].tituloDoAnuncio, 0, sizeof(terrenos[index].tituloDoAnuncio));
+					//apartamentos[index] = apartamentos[ultimoIndiceApartamentos-1];
+					//ultimoIndiceApartamentos--;
+					
+					inserirInformacoesTerreno(&(terrenos[index]));
+					
+					//casas[index] = casas[ultimoIndiceCasas-1];
+					//ultimoIndiceCasas--;
+					if(salvarArrayDeTerrenosNoArquivo()){
+						printf("Terreno atualizado com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na atualizacao.\n");
+					}
+				}
+				//Mostrar terreno
+				break;
+		}
+	}else{ //vai deletar == 0
+		printf("Nao foi localizado nenhum imovel no endereco informado.\n");
+	}
+	sleep(3);
+	system("cls");
+	menu();
 }
 
 

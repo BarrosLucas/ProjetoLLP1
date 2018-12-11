@@ -1,21 +1,21 @@
 {
-"tituloDoAnuncio":"Titulo 1",
-"numeroDePavimentos":"1",
-"numeroDeQuartos":"1",
-"areaDoTerreno":"1.0",
-"areaConstruida":"1.0",
+"tituloDoAnuncio":"Titulo 5",
+"numeroDePavimentos":"5",
+"numeroDeQuartos":"5",
+"areaDoTerreno":"5.0",
+"areaConstruida":"5.0",
 "endereco":
 {
 "rua":"Rua 1",
-"numero":"1",
+"numero":"5",
 "bairro":"Bairro 1",
 "CEP":"11111-111",
 "cidade":"Cidade 1"
 },
 "informacoes":
 {
-"aluguelOuVenda":"1",
-"valor":"100.00"
+"aluguelOuVenda":"0",
+"valor":"500.00"
 }
 }{
 "tituloDoAnuncio":"Titulo 6",
@@ -75,22 +75,22 @@
 "valor":"400.00"
 }
 }{
-"tituloDoAnuncio":"Titulo 5",
-"numeroDePavimentos":"5",
-"numeroDeQuartos":"5",
-"areaDoTerreno":"5.0",
-"areaConstruida":"5.0",
+"tituloDoAnuncio":"9",
+"numeroDePavimentos":"9",
+"numeroDeQuartos":"9",
+"areaDoTerreno":"9.0",
+"areaConstruida":"9.0",
 "endereco":
 {
-"rua":"Rua 5",
-"numero":"5",
-"bairro":"Bairro 5",
-"CEP":"55555-555",
-"cidade":"Cidade 5"
+"rua":"1",
+"numero":"1",
+"bairro":"1",
+"CEP":"1",
+"cidade":"1"
 },
 "informacoes":
 {
-"aluguelOuVenda":"0",
-"valor":"500.00"
+"aluguelOuVenda":"1",
+"valor":"1.00"
 }
 }
