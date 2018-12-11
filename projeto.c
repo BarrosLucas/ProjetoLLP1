@@ -1088,7 +1088,7 @@ void decodificadorTerreno(char terreno[], struct Terreno *novoTerreno, int taman
 			}else if(terreno[i]=='}'){
 				chave --;
 				if(chave == 0){
-					mostrarTerreno(&(*novoTerreno));
+					//mostrarTerreno(&(*novoTerreno));
 				}
 			}else if(terreno[i] != '\n' && terreno[i] != ':' && terreno[i] != ','){
 				if(ehComando){
