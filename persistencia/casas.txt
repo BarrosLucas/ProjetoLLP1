@@ -18,23 +18,23 @@
 "valor":"100.00"
 }
 }{
-"tituloDoAnuncio":"Titulo 2",
-"numeroDePavimentos":"2",
-"numeroDeQuartos":"2",
-"areaDoTerreno":"2.0",
-"areaConstruida":"2.0",
+"tituloDoAnuncio":"Titulo 6",
+"numeroDePavimentos":"6",
+"numeroDeQuartos":"6",
+"areaDoTerreno":"6.0",
+"areaConstruida":"6.0",
 "endereco":
 {
-"rua":"Rua 2",
-"numero":"2",
-"bairro":"Bairro 2",
-"CEP":"22222-222",
-"cidade":"Cidade 2"
+"rua":"Rua 6",
+"numero":"6",
+"bairro":"Bairro 6",
+"CEP":"66666-666",
+"cidade":"Cidade 6"
 },
 "informacoes":
 {
-"aluguelOuVenda":"0",
-"valor":"137.00"
+"aluguelOuVenda":"1",
+"valor":"600.00"
 }
 }{
 "tituloDoAnuncio":"Titulo 3",
@@ -92,24 +92,5 @@
 {
 "aluguelOuVenda":"0",
 "valor":"500.00"
-}
-}{
-"tituloDoAnuncio":"Titulo 6",
-"numeroDePavimentos":"6",
-"numeroDeQuartos":"6",
-"areaDoTerreno":"6.0",
-"areaConstruida":"6.0",
-"endereco":
-{
-"rua":"Rua 6",
-"numero":"6",
-"bairro":"Bairro 6",
-"CEP":"66666-666",
-"cidade":"Cidade 6"
-},
-"informacoes":
-{
-"aluguelOuVenda":"1",
-"valor":"600.00"
 }
 }

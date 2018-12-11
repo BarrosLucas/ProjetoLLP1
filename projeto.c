@@ -158,6 +158,7 @@ void menu(){
 	
 	scanf("%d",&escolha);
 	system("cls");
+	fflush(stdin);
 	switch(escolha){
 		case 1:
 			cadastrar();
@@ -166,7 +167,7 @@ void menu(){
 			consultar();
 			break;
 		case 3:
-			//remover();
+			remover();
 			break;
 		case 4:
 			//editar();
@@ -799,6 +800,193 @@ int menuBuscaVendaTipo(){
 }
 
 
+void remover(){
+	
+	/*
+	
+	char rua[100];
+	int numero;
+	char bairro[100];
+	char CEP[10];
+	char cidade[100];
+	*/
+	int num;
+	struct Endereco endereco;
+	printf("=====REMOVER=====\n");
+	printf("Informe o endereco do imovel...\n");
+	
+	printf("Rua: ");
+	fgets(endereco.rua,100,stdin);
+	endereco.rua[strcspn(endereco.rua, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("Numero: ");
+	scanf("%d",&num);
+	endereco.numero = num;
+	fflush(stdin);
+	
+	printf("Bairro: ");
+	fgets(endereco.bairro,100,stdin);
+	endereco.bairro[strcspn(endereco.bairro, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("CEP: ");
+	fgets(endereco.CEP,10,stdin);
+	endereco.CEP[strcspn(endereco.CEP, "\n")] = '\0';
+	fflush(stdin);
+	
+	printf("Cidade: ");
+	fgets(endereco.cidade,100,stdin);
+	endereco.cidade[strcspn(endereco.cidade, "\n")] = '\0';
+	fflush(stdin);
+	
+	int vaiDeletar = jaExisteEndereco(&endereco);
+	if(vaiDeletar != 0){
+		int index,escolha;
+		switch(vaiDeletar){
+			case 1:
+				index = buscarCasaPorEndereco(&endereco);
+				printf("Deseja mesmo excluir esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					casas[index] = casas[ultimoIndiceCasas-1];
+					ultimoIndiceCasas--;
+					if(salvarArrayDeCasasNoArquivo()){
+						printf("Casa removida com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na remocao.\n");
+					}
+					//Deletar do array e do arquivo
+				}
+				//Mostrar casa
+				break;
+			case 2:
+				index = buscarApartamentoPorEndereco(&endereco);
+				printf("Deseja mesmo excluir esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					apartamentos[index] = apartamentos[ultimoIndiceApartamentos-1];
+					ultimoIndiceApartamentos--;
+					if(salvarArrayDeApartamentosNoArquivo()){
+						printf("Apartamento removido com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na remocao.\n");
+					}
+					//Deletar do array e do arquivo
+				}
+				//Mostrar apartamento
+				break;
+			case 3:
+				index = buscarTerrenoPorEndereco(&endereco);
+				printf("Deseja mesmo excluir esse imovel?\n1 - Sim\n2 - Nao\nEscolha: ");
+				scanf("%d",&escolha);
+				if(escolha==1){
+					terrenos[index] = terrenos[ultimoIndiceTerrenos-1];
+					ultimoIndiceTerrenos--;
+					if(salvarArrayDeTerrenosNoArquivo()){
+						printf("Terreno removido com sucesso!\n");
+					}else{
+						printf("Houve alguma falha na remocao.\n");
+					}
+					//Deletar do array e do arquivo
+				}
+				//Mostrar terreno
+				break;
+		}
+	}else{ //vai deletar == 0
+		printf("Nao foi localizado nenhum imovel no endereco informado.\n");
+	}
+	sleep(3);
+	system("cls");
+	menu();
+}
+int salvarArrayDeCasasNoArquivo(){
+	int retorno = 0,i;
+	
+	//Limpa o arquivo
+	FILE *fp;
+	
+	fp=fopen("persistencia/casas.txt","w");
+	fprintf(fp,"");
+	
+	fclose(fp);
+	
+	for(i=0;i<ultimoIndiceCasas;i++){
+		retorno = salvarCasa(&casas[i]);
+		if(!retorno){
+			return retorno;
+		}
+	}
+	return retorno;
+}
+
+int salvarArrayDeApartamentosNoArquivo(){
+	int retorno = 0,i;
+	
+	//Limpa o arquivo
+	FILE *fp;
+	
+	fp=fopen("persistencia/apartamentos.txt","w");
+	fprintf(fp,"");
+	
+	fclose(fp);
+	
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		retorno = salvarApartamento(&apartamentos[i]);
+		if(!retorno){
+			return retorno;
+		}
+	}
+	
+	return retorno;
+}
+
+int salvarArrayDeTerrenosNoArquivo(){
+	int retorno = 0,i;
+	
+	//Limpa o arquivo
+	FILE *fp;
+	
+	fp=fopen("persistencia/terrenos.txt","w");
+	fprintf(fp,"");
+	
+	fclose(fp);
+	
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		retorno = salvarTerreno(&terrenos[i]);
+		if(!retorno){
+			return retorno;
+		}
+	}
+	return retorno;
+}
+int buscarCasaPorEndereco(struct Endereco *endereco){
+	int i = 0;
+	for(i=0;i<ultimoIndiceCasas;i++){
+		if(!stricmp((*endereco).bairro,casas[i].endereco.bairro) && !stricmp((*endereco).CEP,casas[i].endereco.CEP) && !stricmp((*endereco).cidade,casas[i].endereco.cidade) && !stricmp((*endereco).rua,casas[i].endereco.rua) && (*endereco).numero == casas[i].endereco.numero){
+			mostrarCasa(&(casas[i]));
+			return i;
+		}
+	}
+}
+int buscarTerrenoPorEndereco(struct Endereco *endereco){
+	int i;
+	for(i=0;i<ultimoIndiceTerrenos;i++){
+		if(!stricmp((*endereco).bairro,terrenos[i].endereco.bairro) && !stricmp((*endereco).CEP,terrenos[i].endereco.CEP) && !stricmp((*endereco).cidade,terrenos[i].endereco.cidade) && !stricmp((*endereco).rua,terrenos[i].endereco.rua) && (*endereco).numero == terrenos[i].endereco.numero){
+			mostrarTerreno(&(terrenos[i]));
+			return i;
+		}
+	}
+}
+int buscarApartamentoPorEndereco(struct Endereco *endereco){
+	int i;
+	for(i=0;i<ultimoIndiceApartamentos;i++){
+		if(!stricmp((*endereco).bairro,apartamentos[i].endereco.bairro) && !stricmp((*endereco).CEP,apartamentos[i].endereco.CEP) && !stricmp((*endereco).cidade,apartamentos[i].endereco.cidade) && !stricmp((*endereco).rua,apartamentos[i].endereco.rua) && (*endereco).numero == apartamentos[i].endereco.numero){
+			mostrarApartamento(&(apartamentos[i]));
+			return i;
+		}
+	}
+}
 int jaExisteTitulo(char titulo[]){
 	int i;
 	for(i=0;i<ultimoIndiceCasas;i++){
@@ -820,6 +1008,12 @@ int jaExisteTitulo(char titulo[]){
 }
 
 int jaExisteEndereco(struct Endereco *endereco){
+	/*
+		RETORNA 1 SE FOR UMA CASA
+		RETORNA 2 SE FOR UM APARTAMENTO
+		RETORNA 3 SE FOR UM TERRENO
+		RETORNA 0 SE N FOR NADA
+	*/
 	int i = 0;
 	for(i=0;i<ultimoIndiceCasas;i++){
 		if(!stricmp((*endereco).bairro,casas[i].endereco.bairro) && !stricmp((*endereco).CEP,casas[i].endereco.CEP) && !stricmp((*endereco).cidade,casas[i].endereco.cidade) && !stricmp((*endereco).rua,casas[i].endereco.rua) && (*endereco).numero == casas[i].endereco.numero){
@@ -828,12 +1022,12 @@ int jaExisteEndereco(struct Endereco *endereco){
 	}
 	for(i=0;i<ultimoIndiceApartamentos;i++){
 		if(!stricmp((*endereco).bairro,apartamentos[i].endereco.bairro) && !stricmp((*endereco).CEP,apartamentos[i].endereco.CEP) && !stricmp((*endereco).cidade,apartamentos[i].endereco.cidade) && !stricmp((*endereco).rua,apartamentos[i].endereco.rua) && (*endereco).numero == apartamentos[i].endereco.numero){
-			return 1;
+			return 2;
 		}
 	}
 	for(i=0;i<ultimoIndiceTerrenos;i++){
 		if(!stricmp((*endereco).bairro,terrenos[i].endereco.bairro) && !stricmp((*endereco).CEP,terrenos[i].endereco.CEP) && !stricmp((*endereco).cidade,terrenos[i].endereco.cidade) && !stricmp((*endereco).rua,terrenos[i].endereco.rua) && (*endereco).numero == terrenos[i].endereco.numero){
-			return 1;
+			return 3;
 		}
 	}
 	return 0;

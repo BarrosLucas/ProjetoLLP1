@@ -1,20 +1,4 @@
 {
-"tituloDoAnuncio":"Titulo 10",
-"area":"10.0",
-"endereco":
-{
-"rua":"Rua 10",
-"numero":"10",
-"bairro":"Bairro 10",
-"CEP":"10101-010",
-"cidade":"Cidade 10"
-},
-"informacoes":
-{
-"aluguelOuVenda":"1",
-"valor":"321.00"
-}
-}{
 "tituloDoAnuncio":"Titulo 11",
 "area":"11.0",
 "endereco":

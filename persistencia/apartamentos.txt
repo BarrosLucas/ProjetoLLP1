@@ -19,25 +19,4 @@
 "aluguelOuVenda":"1",
 "valor":"139.00"
 }
-}{
-"tituloDoAnuncio":"Titulo 7",
-"area":"7.0",
-"numeroDeQuartos":"7",
-"posicao":"Aqui",
-"andar":"7",
-"valorDoCondominio":"70.00",
-"vagas":"7",
-"endereco":
-{
-"rua":"Rua 7",
-"numero":"7",
-"bairro":"Bairro 7",
-"CEP":"77777-777",
-"cidade":"Cidade 7"
-},
-"informacoes":
-{
-"aluguelOuVenda":"0",
-"valor":"142.00"
-}
 }
