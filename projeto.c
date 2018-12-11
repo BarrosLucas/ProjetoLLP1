@@ -538,7 +538,7 @@ int menuConsulta(){
 	printf("3 - Buscar imovel por bairro\n");
 	printf("4 - Buscar imovel acima de um valor\n");
 	printf("5 - Buscar os imoveis a venda por tipo de imovel\n");
-	printf("6 - Butuscar os imoveis a aluguel por tipo de imovel\n");
+	printf("6 - Buscar os imoveis a aluguel por tipo de imovel\n");
 	printf("7 - Voltar\n");
 	printf("Sua escolha: ");
 	scanf("%d",&escolha);
@@ -580,7 +580,10 @@ void buscarPorTitulo(){
 	printf("=====BUSCA POR TITULO=====\n");
 	printf("Titulo: ");
 	fgets(titulo,30,stdin);
+	titulo[strcspn(titulo, "\n")] = '\0';
 	fflush(stdin);
+	
+	
 	
 	for(i=0;i<ultimoIndiceCasas;i++){
 		if(stricmp(titulo,casas[i].tituloDoAnuncio)==0){
@@ -610,7 +613,7 @@ void buscarPorTitulo(){
 		printf("Nenhum item identificado...\n");
 		printf("Deseja realizar novamente a busca?\n");
 		printf("1 - Sim\n");
-		printf("Qualquer outra tecla - Nao\n");
+		printf("Enter - Nao\n");
 		printf("Sua escolha: ");
 		scanf("%c",&escolha);
 		if(escolha == '1'){
@@ -630,6 +633,7 @@ void buscarPorBairro(){
 	printf("=====BUSCA POR BAIRRO=====\n");
 	printf("Bairro: ");
 	fgets(bairro,100,stdin);
+	bairro[strcspn(bairro, "\n")] = '\0';
 	fflush(stdin);
 	
 	for(i=0;i<ultimoIndiceCasas;i++){
