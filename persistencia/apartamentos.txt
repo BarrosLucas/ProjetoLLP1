@@ -1,0 +1,43 @@
+{
+"tituloDoAnuncio":"Titulo 8",
+"area":"8.0",
+"numeroDeQuartos":"8",
+"posicao":"8",
+"andar":"8",
+"valorDoCondominio":"80.00",
+"vagas":"8",
+"endereco":
+{
+"rua":"Rua 8",
+"numero":"8",
+"bairro":"Bairro 8",
+"CEP":"88888-888",
+"cidade":"Cidade 8"
+},
+"informacoes":
+{
+"aluguelOuVenda":"1",
+"valor":"139.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 7",
+"area":"7.0",
+"numeroDeQuartos":"7",
+"posicao":"Aqui",
+"andar":"7",
+"valorDoCondominio":"70.00",
+"vagas":"7",
+"endereco":
+{
+"rua":"Rua 7",
+"numero":"7",
+"bairro":"Bairro 7",
+"CEP":"77777-777",
+"cidade":"Cidade 7"
+},
+"informacoes":
+{
+"aluguelOuVenda":"0",
+"valor":"142.00"
+}
+}

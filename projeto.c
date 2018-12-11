@@ -255,7 +255,7 @@ void cadastrar(){
 			if(!continua){
 				inserirInformacoesTerreno(&novoTerreno);
 				
-				if(salvarTerreno(&novoApartamento)){
+				if(salvarTerreno(&novoTerreno)){
 					terrenos[ultimoIndiceTerrenos] = novoTerreno;
 					ultimoIndiceTerrenos ++;
 					printf("CADASTRO REALIZADO COM SUCESSO!");		
@@ -1219,7 +1219,7 @@ void decodificadorApartamento(char apartamento[], struct Apartamento *novoAparta
 			}else if(apartamento[i]=='}'){
 				chave --;
 				if(chave == 0){
-					mostrarApartamento(&(*novoApartamento));
+					//mostrarApartamento(&(*novoApartamento));
 				}
 			}else if(apartamento[i] != '\n' && apartamento[i] != ':' && apartamento[i] != ','){
 				if(ehComando){
@@ -1617,6 +1617,118 @@ void mostrarTerreno(struct Terreno *terreno){
 	mostrarInformacoes(&((*terreno).informacoes));
 }
 
+void lerArquivoTerreno(){
+	FILE *fp;
+ 	char c;
+ 	int n = 0;
+	char terreno[800];
+	
+	int chaves = 0;
+	
+	/*
+	char tituloDoAnuncio[30];
+	double area;
+	struct Endereco endereco;
+	struct Informacoes informacoes;
+
+	*/
+	
+	struct Terreno novosTerrenos;
+	
+	if ((fp=fopen ("persistencia/terrenos.txt","r")) != NULL) {
+ 		while( (c=fgetc(fp)) !=EOF) {
+ 			terreno[n] = c;
+ 			//printf("casa[%d] -> %c\n",n,c);
+ 			if(c == '{'){
+ 				chaves++;
+ 				n++;
+			 }else if(c == '}'){
+			 	chaves --;
+			 	if(chaves == 0){
+			 		//printf("Casa:\n%s",casa);
+			 		decodificadorTerreno(terreno,&(novosTerrenos),800);
+			 		terrenos[ultimoIndiceTerrenos] = novosTerrenos;
+			 		
+			 		memset(terreno, 0, sizeof(terreno));
+			 		memset(novosTerrenos.tituloDoAnuncio, 0, sizeof(novosTerrenos.tituloDoAnuncio));
+			 		
+			 		memset(novosTerrenos.endereco.bairro, 0, sizeof(novosTerrenos.endereco.bairro));
+			 		memset(novosTerrenos.endereco.CEP, 0, sizeof(novosTerrenos.endereco.CEP));
+			 		memset(novosTerrenos.endereco.cidade, 0, sizeof(novosTerrenos.endereco.cidade));
+			 		memset(novosTerrenos.endereco.rua, 0, sizeof(novosTerrenos.endereco.rua));
+			 		ultimoIndiceTerrenos++;
+			 		n=0;
+				}else{
+					n++;
+				}
+			}else{
+				n++;
+			}
+ 		}
+	 	fclose(fp);
+	 	menu();	
+	}
+}
+
+void lerArquivoApartamento(){
+	FILE *fp;
+ 	char c;
+ 	int n = 0;
+	char ap[800];
+	
+	int chaves = 0;
+	
+	/*
+	char tituloDoAnuncio[30];
+	double area;
+	int numeroDeQuartos;
+	char posicao[50];
+	int andar;
+	double valorDoCondominio;
+	int numeroDeVagasDeGaragem;
+	struct Endereco endereco;
+	struct Informacoes informacoes;
+
+	*/
+	
+	struct Apartamento novosApartamentos;
+	
+	if ((fp=fopen ("persistencia/apartamentos.txt","r")) != NULL) {
+ 		while( (c=fgetc(fp)) !=EOF) {
+ 			ap[n] = c;
+ 			//printf("casa[%d] -> %c\n",n,c);
+ 			if(c == '{'){
+ 				chaves++;
+ 				n++;
+			 }else if(c == '}'){
+			 	chaves --;
+			 	if(chaves == 0){
+			 		//printf("Casa:\n%s",casa);
+			 		decodificadorApartamento(ap,&(novosApartamentos),800);
+			 		apartamentos[ultimoIndiceApartamentos] = novosApartamentos;
+			 		
+			 		memset(ap, 0, sizeof(ap));
+			 		memset(novosApartamentos.tituloDoAnuncio, 0, sizeof(novosApartamentos.tituloDoAnuncio));
+			 		memset(novosApartamentos.posicao, 0, sizeof(novosApartamentos.posicao));
+			 		
+			 		memset(novosApartamentos.endereco.bairro, 0, sizeof(novosApartamentos.endereco.bairro));
+			 		memset(novosApartamentos.endereco.CEP, 0, sizeof(novosApartamentos.endereco.CEP));
+			 		memset(novosApartamentos.endereco.cidade, 0, sizeof(novosApartamentos.endereco.cidade));
+			 		memset(novosApartamentos.endereco.rua, 0, sizeof(novosApartamentos.endereco.rua));
+			 		ultimoIndiceApartamentos++;
+			 		n=0;
+				}else{
+					n++;
+				}
+			}else{
+				n++;
+			}
+ 		}
+	 	fclose(fp);
+	 	lerArquivoTerreno();
+	}
+}
+
 void lerArquivoCasa(){
 	FILE *fp;
  	char c;
@@ -1657,6 +1769,6 @@ void lerArquivoCasa(){
 			}
  		}
 	 	fclose(fp);
-	 	menu();	
+	 	lerArquivoApartamento();
 	}
 }

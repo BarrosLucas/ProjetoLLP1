@@ -1,0 +1,33 @@
+{
+"tituloDoAnuncio":"Titulo 10",
+"area":"10.0",
+"endereco":
+{
+"rua":"Rua 10",
+"numero":"10",
+"bairro":"Bairro 10",
+"CEP":"10101-010",
+"cidade":"Cidade 10"
+},
+"informacoes":
+{
+"aluguelOuVenda":"1",
+"valor":"321.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 11",
+"area":"11.0",
+"endereco":
+{
+"rua":"Rua 11",
+"numero":"11",
+"bairro":"Bairro 11",
+"CEP":"11011-011",
+"cidade":"Cidade 11"
+},
+"informacoes":
+{
+"aluguelOuVenda":"0",
+"valor":"453.00"
+}
+}
