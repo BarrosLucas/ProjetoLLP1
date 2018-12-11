@@ -73,7 +73,11 @@ int ultimoIndiceCasas = 0, ultimoIndiceApartamentos = 0, ultimoIndiceTerrenos = 
 
 int main(void){
 	int i;
-	menu();	
+	
+
+	lerArquivoCasa();
+	menu();
+	
 /*
 	/*struct Casa novaCasa;
 	novaCasa.areaConstruida = 11;
@@ -187,6 +191,10 @@ void cadastrar(){
 				inserirInformacoesCasa(&novaCasa);	
 				if(salvarCasa(&novaCasa)){
 					casas[ultimoIndiceCasas] = novaCasa;
+					memset(novaCasa.endereco.bairro,0,sizeof(novaCasa.endereco.bairro));
+					memset(novaCasa.endereco.CEP,0,sizeof(novaCasa.endereco.CEP));
+					memset(novaCasa.endereco.cidade,0,sizeof(novaCasa.endereco.cidade));
+					memset(novaCasa.endereco.rua,0,sizeof(novaCasa.endereco.rua));
 					ultimoIndiceCasas ++;
 					printf("CADASTRO REALIZADO COM SUCESSO!");	
 				}else{
@@ -842,6 +850,9 @@ char * codificarTerreno(struct Terreno *terreno){
 	strcpy(informacoes,codificarInformacoes(&((*terreno).informacoes)));
 	
 	const char ter[800] = "{\n";
+	memset(ter, 0, sizeof(ter));
+	
+	strcpy(ter,"{\n");
 	strcat(ter,"\"tituloDoAnuncio\":\"");
 	strcat(ter,(*terreno).tituloDoAnuncio);
 	strcat(ter,"\",\n\"area\":\"");
@@ -878,6 +889,9 @@ char * codificarApartamento(struct Apartamento *apartamento){
 	};
 	*/
 	const char ap[800] = "{\n";
+	memset(ap, 0, sizeof(ap));
+	
+	strcpy(ap,"{\n");
 	strcat(ap,"\"tituloDoAnuncio\":\"");
 	strcat(ap,(*apartamento).tituloDoAnuncio);
 	strcat(ap,"\",\n\"area\":\"");
@@ -915,6 +929,16 @@ char * codificarCasa(struct Casa *casa){
 		struct Informacoes informacoes; -> 100
 	};
 	*/
+	
+	
+	//struct Casa casa;
+	//casa.endereco.
+	memset(endereco, 0, sizeof(endereco));
+	memset(info, 0, sizeof(info));
+	//printf("ENDERECO ANTES: \nBairro -> %s\nRua -> %s\nCidade -> %s\nCEP -> %s\n",(*casa).endereco.bairro,(*casa).endereco.rua,(*casa).endereco.cidade,(*casa).endereco.CEP);
+	//memset((*casa).endereco,sizeof((*casa).endereco));
+	//memset((*casa).informacoes,sizeof((*casa).informacoes));
+	
 	sprintf(pavimentos,"%d",(*casa).numeroDePavimentos);
 	sprintf(quartos,"%d",(*casa).numeroDeQuartos);
 	sprintf(terreno,"%.1lf",(*casa).areaDoTerreno);
@@ -922,8 +946,13 @@ char * codificarCasa(struct Casa *casa){
 	strcpy(endereco,codificarEndereco(&((*casa).endereco)));
 	strcpy(info,codificarInformacoes(&((*casa).informacoes)));
 	
+	//printf("ENDERECO: \n%s\n",endereco);
 	
-	const char cas[800] = "{\n";
+	
+	const char cas[800];
+	memset(cas, 0, sizeof(cas));
+	
+	strcpy(cas,"{\n");
 	strcat(cas,"\"tituloDoAnuncio\":\"");
 	strcat(cas,(*casa).tituloDoAnuncio);
 	strcat(cas,"\",\n\"numeroDePavimentos\":\"");
@@ -949,7 +978,10 @@ char * codificarInformacoes(struct Informacoes * informacoes){
 	sprintf(info,"%d",(*informacoes).aluguelOuVenda);
 	sprintf(valor,"%.2lf",(*informacoes).valor);
 	
-	const char inform[100] = "{\n";
+	const char inform[100];
+	memset(inform, 0, sizeof(inform));
+	
+	strcpy(inform,"{\n");
 	strcat(inform,"\"aluguelOuVenda\":\"");
 	strcat(inform,info);
 	strcat(inform,"\",\n\"valor\":\"");
@@ -964,7 +996,11 @@ char * codificarEndereco(struct Endereco *endereco){
 	char numero[5];
 	sprintf(numero,"%d",(*endereco).numero);
 	
-	static char ender[500] = "{\n";
+	static char ender[500];
+	memset(ender, 0, sizeof(ender));
+	strcpy(ender,"{\n");
+	
+	
 	strcat(ender,"\"rua\":\"");
 	strcat(ender,(*endereco).rua);
 	strcat(ender,"\",\n\"numero\":\"");
@@ -976,7 +1012,8 @@ char * codificarEndereco(struct Endereco *endereco){
 	strcat(ender,"\",\n\"cidade\":\"");
 	strcat(ender,(*endereco).cidade);
 	strcat(ender,"\"\n}");
-	//printf("%s\n",ender);
+	
+	//printf("ENDERECO:\n%s\n",ender);
 	
 	return ender;
 }
@@ -1303,7 +1340,7 @@ void decodificadorCasa(char casa[], struct Casa *novaCasa, int tamanho){
 			}else if(casa[i]=='}'){
 				chave --;
 				if(chave == 0){
-					mostrarCasa(&(*novaCasa));
+					//mostrarCasa(&(*novaCasa));
 				}
 			}else if(casa[i] != '\n' && casa[i] != ':' && casa[i] != ','){
 				if(ehComando){
@@ -1578,4 +1615,48 @@ void mostrarTerreno(struct Terreno *terreno){
 	printf("Area: %.1lf metros quadrados\n",(*terreno).area);
 	mostrarEndereco(&((*terreno).endereco));
 	mostrarInformacoes(&((*terreno).informacoes));
+}
+
+void lerArquivoCasa(){
+	FILE *fp;
+ 	char c;
+ 	int n = 0;
+	char casa[800];
+	
+	int chaves = 0;
+	
+	struct Casa novasCasas;
+	
+	if ((fp=fopen ("persistencia/casas.txt","r")) != NULL) {
+ 		while( (c=fgetc(fp)) !=EOF) {
+ 			casa[n] = c;
+ 			//printf("casa[%d] -> %c\n",n,c);
+ 			if(c == '{'){
+ 				chaves++;
+ 				n++;
+			 }else if(c == '}'){
+			 	chaves --;
+			 	if(chaves == 0){
+			 		//printf("Casa:\n%s",casa);
+			 		decodificadorCasa(casa,&(novasCasas),800);
+			 		casas[ultimoIndiceCasas] = novasCasas;
+			 		
+			 		memset(casa, 0, sizeof(casa));
+			 		memset(novasCasas.tituloDoAnuncio, 0, sizeof(novasCasas.tituloDoAnuncio));
+			 		memset(novasCasas.endereco.bairro, 0, sizeof(novasCasas.endereco.bairro));
+			 		memset(novasCasas.endereco.CEP, 0, sizeof(novasCasas.endereco.CEP));
+			 		memset(novasCasas.endereco.cidade, 0, sizeof(novasCasas.endereco.cidade));
+			 		memset(novasCasas.endereco.rua, 0, sizeof(novasCasas.endereco.rua));
+			 		ultimoIndiceCasas++;
+			 		n=0;
+				}else{
+					n++;
+				}
+			}else{
+				n++;
+			}
+ 		}
+	 	fclose(fp);
+	 	menu();	
+	}
 }
