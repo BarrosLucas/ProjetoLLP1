@@ -1,10 +1,52 @@
 {
+"tituloDoAnuncio":"Titulo 6",
+"area":"6.0",
+"numeroDeQuartos":"6",
+"posicao":"6",
+"andar":"6",
+"valorDoCondominio":"6.00",
+"vagas":"6",
+"endereco":
+{
+"rua":"Rua 6",
+"numero":"6",
+"bairro":"Bairro 6",
+"CEP":"66666-666",
+"cidade":"Cidade 6"
+},
+"informacoes":
+{
+"aluguelOuVenda":"1",
+"valor":"400.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 7",
+"area":"7.0",
+"numeroDeQuartos":"7",
+"posicao":"Aqui",
+"andar":"7",
+"valorDoCondominio":"7.00",
+"vagas":"7",
+"endereco":
+{
+"rua":"Rua 7",
+"numero":"7",
+"bairro":"Bairro 7",
+"CEP":"77777-777",
+"cidade":"Cidade 7"
+},
+"informacoes":
+{
+"aluguelOuVenda":"0",
+"valor":"500000.00"
+}
+}{
 "tituloDoAnuncio":"Titulo 8",
 "area":"8.0",
 "numeroDeQuartos":"8",
-"posicao":"8",
+"posicao":"Ali",
 "andar":"8",
-"valorDoCondominio":"80.00",
+"valorDoCondominio":"8.00",
 "vagas":"8",
 "endereco":
 {
@@ -17,6 +59,27 @@
 "informacoes":
 {
 "aluguelOuVenda":"1",
-"valor":"139.00"
+"valor":"800.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 9",
+"area":"9.0",
+"numeroDeQuartos":"9",
+"posicao":"Ali e la",
+"andar":"9",
+"valorDoCondominio":"9.00",
+"vagas":"9",
+"endereco":
+{
+"rua":"Rua 9",
+"numero":"9",
+"bairro":"Bairro 9",
+"CEP":"99999-999",
+"cidade":"Cidade 9"
+},
+"informacoes":
+{
+"aluguelOuVenda":"0",
+"valor":"700000.00"
 }
 }

@@ -1,6 +1,22 @@
 {
-"tituloDoAnuncio":"Titulo 12",
-"area":"5.0",
+"tituloDoAnuncio":"Titulo 10",
+"area":"10.0",
+"endereco":
+{
+"rua":"Rua 10",
+"numero":"10",
+"bairro":"Bairro 10",
+"CEP":"10101-010",
+"cidade":"Cidade 10"
+},
+"informacoes":
+{
+"aluguelOuVenda":"1",
+"valor":"900.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 11",
+"area":"11.0",
 "endereco":
 {
 "rua":"Rua 11",
@@ -12,6 +28,22 @@
 "informacoes":
 {
 "aluguelOuVenda":"0",
-"valor":"453.00"
+"valor":"300.00"
+}
+}{
+"tituloDoAnuncio":"Titulo 12",
+"area":"12.0",
+"endereco":
+{
+"rua":"Rua 12",
+"numero":"12",
+"bairro":"Bairro 12",
+"CEP":"12012-012",
+"cidade":"Cidade 12"
+},
+"informacoes":
+{
+"aluguelOuVenda":"1",
+"valor":"12.00"
 }
 }
